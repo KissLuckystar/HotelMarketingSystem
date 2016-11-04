@@ -6,12 +6,24 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
     "body-parser": "~1.15.1",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
+    "crypto": "0.0.3",
+    "css-loader": "^0.25.0",
     "debug": "~2.2.0",
     "ejs": "~2.4.1",
     "express": "~4.13.4",
+    "express-session": "^1.14.2",
+    "jsx-loader": "^0.13.2",
+    "mongoose": "^4.6.6",
     "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "style-loader": "^0.13.1"
+  },
+  "devDependencies": {
+    "webpack": "^1.13.3"
   }
 }

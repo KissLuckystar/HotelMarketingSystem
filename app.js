@@ -5,6 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var session = require('express-session');//引入session模块
+var mongoose=require('./config/mongoose.js');//4.引入数据库配置文件
+var flash=require('connect-flash');//flash模块用来实现页面通知的功能（即成功与错误信息的提示）
+
+var db=mongoose();
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -21,6 +27,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000*60*60 }//设置1小时过期
+}));
+
+app.use(flash());
+
 
 app.use('/', routes);
 app.use('/users', users);
