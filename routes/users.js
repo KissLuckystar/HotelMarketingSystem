@@ -11,6 +11,68 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+/* 配置管理界面路由 */
+router.get('/collocation/hotel/index',function(req,res){
+   res.render('collocation/hotel/index.ejs');
+});
+router.get('/collocation/group/index',function(req,res){
+    res.render('collocation/group/index.ejs');
+});
+router.get('/collocation/protocol/index',function(req,res){
+    res.render('collocation/protocol/index.ejs');
+});
+router.get('/collocation/equipment/index',function(req,res){
+    res.render('collocation/equipment/index.ejs');
+});
+/* 权限管理路由 */
+
+/* 产品管理路由 */
+router.get('/produce/customization/index',function(req,res){
+    res.render('produce/customization/index.ejs');
+});
+router.get('/produce/verify/index',function(req,res){
+    res.render('users/produce/verify/index.ejs');
+});
+router.get('/produce/maintain/index',function(req,res){
+    res.render('produce/maintain/index.ejs');
+});
+/* 收银台 */
+router.get('/cashierdesk/cashier/index',function(req,res){
+    res.render('cashierdesk/cashier/index.ejs');
+});
+router.get('/cashierdesk/recharge/index',function(req,res){
+    res.render('cashierdesk/recharge/index.ejs');
+});
+router.get('/cashierdesk/cashier/index',function(req,res){
+    res,render('cashierdesk/cashier/index.ejs');
+});
+router.get('/cashierdesk/cashiercheck/index',function(req,res){
+    res,render('cashierdesk/cashiercheck/index.ejs');
+});
+/* 销售统计 */
+router.get('',function(req,res){});
+router.get('',function(req,res){});
+router.get('',function(req,res){});
+router.get('',function(req,res){});
+router.get('',function(req,res){});
+router.get('',function(req,res){});
+/* 账户账单 */
+router.get('/accountbill/account/index',function(req,res){
+    res.render('accountbill/account/index.ejs');
+});
+router.get('/accountbill/bill/index',function(req,res){
+    res.render('accountbill/bill/index.ejs');
+});
+/* 营销信息 */
+router.get('/marketinginfo/marketingpic/index',function(req,res){
+    res.render('marketinginfo/marketingpic/index.ejs');
+});
+router.get('/marketinginfo/marketingactive/index',function(req,res){
+    res.render('marketinginfo/marketingactive/index.ejs');
+});
+
+
+
 router.get('/addUser',function(req,res,next){
 
     //密码使用md5加密
