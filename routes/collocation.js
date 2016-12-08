@@ -7,6 +7,7 @@ var router=express.Router();
 
 var mongoose=require('mongoose');
 var Hotel=mongoose.model('Hotel');
+var Device=mongoose.model('Device');
 mongoose.Promise =global.Promise;//解决（mongoose's default promise library) is deprecated
 
 var checkLogin=require('../middlewares/checkLogin').checkLogin;
@@ -68,7 +69,7 @@ router.post('/hotel/add',checkLogin,function(req,res,next){
     });
 });
 //编辑酒店信息
-router.get('/hotel/:hotelId/edit',function(req,res,next){
+router.get('/hotel/:hotelId/edit',checkLogin,function(req,res,next){
 
     var hotelId=req.params.hotelId; //获取要编辑的项
     console.log(hotelId);
@@ -89,7 +90,7 @@ router.get('/hotel/:hotelId/edit',function(req,res,next){
     });
 });
 //编辑酒店信息
-router.post('/hotel/:hotelId/edit',function(req,res,next){
+router.post('/hotel/:hotelId/edit',checkLogin,function(req,res,next){
     var hotelId=req.params.hotelId;
     var hotel_name=req.fields.hotel_name_e;
     var hotel_address=req.fields.hotel_address_e;
@@ -130,7 +131,7 @@ router.post('/hotel/:hotelId/edit',function(req,res,next){
     });
 });
 //删除酒店信息
-router.post('/hotel/remove',function(req,res,next){
+router.post('/hotel/remove',checkLogin,function(req,res,next){
     var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
     //console.log(typeof(selStr));
     var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
@@ -161,13 +162,150 @@ router.get('/protocol',function(req,res,next){
 });
 //设备管理
 router.get('/equipment',function(req,res,next){
-    res.render('collocation/equipment/index');
+    //查询设备和酒店信息，并显示
+    Promise.all([
+        Device.find({},function(err,devices){
+            if(err){
+                console.log('find device err',err);
+            }
+            if(!devices){
+                //throw new Error('列表为空');
+                console.log('列表为空');
+            }
+        }),
+        Hotel.find({},function(err,hotels){
+            if(err){
+                console.log('find hotel err',err);
+            }
+            if(!hotels){
+                throw new Error('列表为空');
+            }
+        }),
+    ]).then(function(result){
+        var devices=result[0];
+        var hotels=result[1];
+
+        res.render('collocation/equipment/index',{
+            devices:devices,
+            hotels:hotels
+        })
+    }).catch(next);
+
 });
+//新增设备信息
+router.post('/equipment/add',checkLogin,function(req,res,next){
+    var device_hotel=req.fields.device_hotel;
+    var device_num=req.fields.device_num;
+    var device_mac=req.fields.device_mac;
+    var device_status=req.fields.device_status;
+    var note=req.fields.note;
 
+    //参数校验
+    try{
+        if(!device_num){
+            throw new Error('请填写设备编号');
+        }
+        if(!device_mac){
+            throw new Error('请填写设备MAC地址');
+        }
+    }catch(e){
+        console.log('参数校验未通过');
+        req.flash('error', e.message);
+        return res.redirect('back');
+    }
 
+    var device=new Device({
+        device_hotel:device_hotel,
+        device_num:device_num,
+        device_mac:device_mac,
+        device_status:device_status,
+        note:note
+    });
 
+    device.save(function(err){
+        if(err){
+            req.flash('error','新增失败');
+            return res.redirect('back');
+        }
+        req.flash('success','新增成功');
+        res.redirect('/collocation/equipment');
+    });
+});
+//编辑设备信息
+router.get('/equipment/:deviceId/edit',checkLogin,function(req,res,next){
 
+    var deviceId=req.params.deviceId; //获取要编辑的项
 
+    //查询选择项的信息
+    Device.findOne({_id:deviceId},function(err,device){
+        if(err){
+            console.log('find err');
+            return;
+        }
+        if(!device){
+            req.flash('error','该选择项不存在');
+            res.redirect('/collocation/equipment');
+        }
+        //console.log(hotel);
+        //res.render('')
+        return res.json(device);  //将查询到的结果返回给页面
+    });
+});
+//编辑酒店信息
+router.post('/equipment/:deviceId/edit',checkLogin,function(req,res,next){
+    var deviceId=req.params.deviceId;
+    var device_hotel=req.fields.device_hotel_e;
+    var device_num=req.fields.device_num_e;
+    var device_mac=req.fields.device_mac_e;
+    var device_status=req.fields.device_status_e;
+    var note=req.fields.note_e;
 
+    //参数校验
+    try{
+        if(!device_num){
+            throw new Error('请填写设备编号');
+        }
+        if(!device_mac){
+            throw new Error('请填写设备MAC地址');
+        }
+    }catch(e){
+        req.flash('error', e.message);
+        return res.redirect('back');
+    }
+
+    var device={
+        device_hotel:device_hotel,
+        device_num:device_num,
+        device_mac:device_mac,
+        device_status:device_status,
+        note:note
+    };
+
+    Device.update({_id:deviceId},{$set:device},function(err){
+        if(err){
+            console.log('err');
+            req.flash('error','更新失败');
+            return res.redirect('back');
+        }
+        req.flash('success','更新成功');
+        res.redirect('/collocation/equipment');
+    });
+});
+//删除设备信息
+router.post('/equipment/remove',checkLogin,function(req,res,next){
+    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
+    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
+    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
+        //console.log(selJson[i]);
+        Device.remove({_id:selJson[i]},function(err){
+            if(err){
+                console.log('del err',err);
+                return;
+            }
+        })
+    }
+    req.flash('success','删除成功');
+    return res.json({'success':'删除成功'});
+});
 
 module.exports=router;

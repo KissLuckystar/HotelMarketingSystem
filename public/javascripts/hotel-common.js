@@ -12,8 +12,8 @@ $(function(){
             $('.td_sel').prop('checked',false);
         }
     });
-    //编辑
-    $('#edit').click(function(){
+    //酒店信息编辑
+    $('#edit_hotel').click(function(){
         var selList=getChecked(); //获取到已选择项的value值
         if(selList.length==0){
             alert('请选择要编辑的选项！');
@@ -34,6 +34,40 @@ $(function(){
                     $('#note_e').val(data.note);
                     //设置form的action地址
                     $('#editForm').attr('action','/collocation/hotel/'+data._id+'/edit');  //设置form表单的action地址
+                    $('#editModal').modal('show');
+                },
+                error:function(xhr,textStatus){
+                    console.log(xhr+textStatus);
+                }
+            })
+        }
+    });
+
+    //设备信息编辑
+    $('#edit_device').click(function(){
+        var selList=getChecked(); //获取到已选择项的value值
+        if(selList.length==0){
+            alert('请选择要编辑的选项！');
+        }else if(selList.length>1){
+            alert('请选择一项进行编辑！');
+        }else{
+            $.ajax({
+                url:'/collocation/equipment/'+selList[0]+'/edit',
+                type:'GET',//POST,GET
+                async:true,//是否异步
+                data:{_id:selList[0]},
+                dataType:'json',
+                success:function(data){
+                    //console.log(data.hotel_address);
+                    $('#device_hotel_e').val(data.device_hotel);
+                    $('#device_num_e').val(data.device_num);
+                    $('#device_mac_e').val(data.device_mac);
+                    if(!data.device_status){
+                        $('#device_no_e').attr('checked',true);
+                    }
+                    $('#note_e').val(data.note);
+                    //设置form的action地址
+                    $('#editForm').attr('action','/collocation/equipment/'+data._id+'/edit');  //设置form表单的action地址
                     $('#editModal').modal('show');
                 },
                 error:function(xhr,textStatus){

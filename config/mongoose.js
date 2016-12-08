@@ -11,5 +11,7 @@ module.exports=function(){
     require('../models/user.server.model.js');//引用相关的model
     //引入酒店信息model
     require('../models/hotel.server.model.js');
+    //引入设备信息model
+    require('../models/device.server.model.js');
     return db;//返回数据库实例
 };
