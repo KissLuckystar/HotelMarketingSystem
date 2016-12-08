@@ -25,8 +25,13 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));//在终端显示简单的不同颜色的日志
-app.use(bodyParser.json());//解析body中的jspn格式数据
-//app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());//解析body中的json格式数据
+//app.use(bodyParser.urlencoded({
+//    type: function(req) {
+//        return /x-www-form-urlencoded/.test(req.headers['content-type']);
+//    },
+//    extended: false
+//}));
 app.use(cookieParser());//处理cookie
 app.use(express.static(path.join(__dirname, 'public')));//设置根目录的public文件夹为静态文件夹服务器
 

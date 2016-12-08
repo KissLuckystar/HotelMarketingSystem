@@ -5,6 +5,80 @@
     <title>酒店管理</title>
 </head>
 <body>
-    酒店管理
+    <div>
+        <h1>新增酒店信息</h1>
+
+        <form action="/collocation/hotel/add" method="post">
+            <div>
+                <label for="">酒店名称:</label>
+                <input type="text" name="hotel_name"/>
+            </div>
+            <div>
+                <label for="">酒店地址:</label>
+                <input type="text" name="hotel_address"/>
+            </div>
+            <div>
+                <label for="">酒店电话:</label>
+                <input type="text" name="phone"/>
+            </div>
+            <div>
+                <label for="">备注:</label>
+                <input type="text" name="note"/>
+            </div>
+            <input type="submit" value="新增"/>
+            <input type="reset" value="重置"/>
+            <input type="button" id="edit" value="编辑"/>
+            <input type="button" id="delete" value="删除"/>
+        </form>
+    </div>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th><input type="checkbox" name="sel" id="sel" alt="全选"/></th>
+                <th>酒店名称</th>
+                <th>酒店地址</th>
+                <th>酒店电话</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% hotels.forEach(function(hotel){ %>
+            <tr>
+                <td><input type="checkbox" name="td_sel" class="td_sel" value="<%= hotel._id %>"/></td>
+                <td><%= hotel.hotel_name %></td>
+                <td><%= hotel.hotel_address %></td>
+                <td><%= hotel.phone %></td>
+                <td><%= hotel.note %></td>
+            </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h1>编辑酒店信息</h1>
+
+        <form id="editForm" action="" method="post">
+            <div>
+                <label for="">酒店名称:</label>
+                <input type="text" id="hotel_name_e" name="hotel_name_e"/>
+            </div>
+            <div>
+                <label for="">酒店地址:</label>
+                <input type="text" id="hotel_address_e" name="hotel_address_e"/>
+            </div>
+            <div>
+                <label for="">酒店电话:</label>
+                <input type="text" id="phone_e" name="phone_e"/>
+            </div>
+            <div>
+                <label for="">备注:</label>
+                <input type="text" id="note_e" name="note_e"/>
+            </div>
+            <input type="submit" value="更新"/>
+        </form>
+    </div>
+    <script type="text/javascript" src="../javascripts/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="../javascripts/hotel-common.js"></script>
 </body>
 </html>

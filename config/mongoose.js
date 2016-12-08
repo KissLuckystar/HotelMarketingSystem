@@ -9,7 +9,7 @@ module.exports=function(){
     var db=mongoose.connect(config.mongodb);//数据库连接
     //引入User model
     require('../models/user.server.model.js');//引用相关的model
-    //引入Post model
-    //require('../models/post.server.model.js');
+    //引入酒店信息model
+    require('../models/hotel.server.model.js');
     return db;//返回数据库实例
 };
