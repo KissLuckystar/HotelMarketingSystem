@@ -46,6 +46,7 @@ router.post('/hotel/add',checkLogin,function(req,res,next){
             throw new Error('请填写酒店电话');
         }
     }catch(e){
+        console.log('参数校验未通过');
         req.flash('error', e.message);
         return res.redirect('back');
     }
@@ -130,9 +131,24 @@ router.post('/hotel/:hotelId/edit',function(req,res,next){
 });
 //删除酒店信息
 router.post('/hotel/remove',function(req,res,next){
-    var selJson=JSON.stringify(req.fields);
-    console.log(selJson);
-
+    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
+    //console.log(typeof(selStr));
+    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
+    //console.log(selJson+' '+typeof(selJson));
+    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
+        //console.log(selJson[i]);
+        Hotel.remove({_id:selJson[i]},function(err){
+            if(err){
+                console.log('del err',err);
+                return;
+            }
+        })
+    }
+    //console.log(req.params);  //为空
+    //console.log(req.body);    //为空
+    //console.log(req.query);   //为空
+    req.flash('success','删除成功');
+    //res.redirect('/collocation/hotel');
     return res.json({'success':'删除成功'});
 });
 //班组管理

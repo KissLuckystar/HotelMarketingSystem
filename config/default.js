@@ -9,5 +9,5 @@ module.exports={
         key:'HotelMarketingSystem',
         maxAge:1000*60*60  //设置一小时过期
     },
-    mongodb:'mongodb://localhost/hotelMarketing'
+    mongodb:'mongodb://10.141.93.82:27017/hotelMarketing'
 };

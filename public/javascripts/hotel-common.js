@@ -34,6 +34,7 @@ $(function(){
                     $('#note_e').val(data.note);
                     //设置form的action地址
                     $('#editForm').attr('action','/collocation/hotel/'+data._id+'/edit');  //设置form表单的action地址
+                    $('#editModal').modal('show');
                 },
                 error:function(xhr,textStatus){
                     console.log(xhr+textStatus);
@@ -41,22 +42,28 @@ $(function(){
             })
         }
     });
+
+
     //删除
     $('#delete').click(function(){
         var selList=getChecked();
         if(selList.length==0){
             alert('请选择要删除的选项！');
         }else{
-            console.log(arrToJSON(selList));
-            var selJson=arrToJSON(selList);
+            //console.log(JSON.stringify(selList));
+            var selJson=JSON.stringify(selList);
+
+            var iframeSrc=$('iframe',parent.document).attr('src');//得到父窗口iframe的src地址传给ajax的url
+            console.log('iframeSrc:',iframeSrc);
             $.ajax({
-                url:'/collocation/hotel/remove',
+                url:'/'+iframeSrc+'/remove',
                 type:'POST',
                 async:true,
-                data:selJson,  //转换为JSON格式传输
+                data:{"_ids":selJson},  //转换为JSON格式传输
                 dataType:'json',
                 success:function(data){
-                    console.log(data);
+                    //console.log(data);
+                    window.location.reload();
                 },
                 error:function(xhr,textStatus){
                     console.log(xhr+textStatus);
@@ -65,18 +72,12 @@ $(function(){
         }
     })
 });
+//获取选择项
 function getChecked(){
-    var selArr=new Array();
+    var selArr=[];
     $('input[name=td_sel]:checked').each(function(){
         selArr.push($(this).val());
     });
+    //console.log('selArr',selArr);
     return selArr;  //返回的是数组
-}
-function arrToJSON(arr){
-    var json=[];
-    for(var i=0;i<arr.length;i++){
-        d['_id']=arr[i];
-    }
-    return JSON.stringify(json);
-
 }
