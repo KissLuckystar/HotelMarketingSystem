@@ -8,6 +8,7 @@ var router=express.Router();
 var mongoose=require('mongoose');
 var Hotel=mongoose.model('Hotel');
 var Device=mongoose.model('Device');
+var Protocol=mongoose.model('Protocol');
 mongoose.Promise =global.Promise;//解决（mongoose's default promise library) is deprecated
 
 var checkLogin=require('../middlewares/checkLogin').checkLogin;
@@ -158,8 +159,127 @@ router.get('/group',function(req,res,next){
 });
 //协议管理
 router.get('/protocol',function(req,res,next){
-    res.render('collocation/protocol/index');
+    //查询协议信息，并显示
+    Protocol.find({},function(err,protocols){
+        if(err){
+            console.log('find hotel err',err);
+        }
+        if(!protocols){
+            throw new Error('列表为空');
+        }
+        res.render('collocation/protocol/index',{
+            protocols:protocols
+        });
+    });
 });
+//新增协议信息
+router.post('/protocol/add',checkLogin,function(req,res,next){
+    var title=req.fields.title;
+    var content=req.fields.content;
+    var note=req.fields.note;
+
+    //参数校验
+    try{
+        if(!title){
+            throw new Error('请填写协议标题');
+        }
+        if(!content){
+            throw new Error('请填写协议内容');
+        }
+    }catch(e){
+        console.log('参数校验未通过');
+        req.flash('error', e.message);
+        return res.redirect('back');
+    }
+
+    var protocol=new Protocol({
+        title:title,
+        content:content,
+        note:note
+    });
+
+    protocol.save(function(err){
+        if(err){
+            req.flash('error','新增失败');
+            return res.redirect('back');
+        }
+        req.flash('success','新增成功');
+        res.redirect('/collocation/protocol');
+    });
+});
+//编辑协议信息
+router.get('/protocol/:protocolId/edit',checkLogin,function(req,res,next){
+
+    var protocolId=req.params.protocolId; //获取要编辑的项
+
+    //查询选择项的信息
+    Protocol.findOne({_id:protocolId},function(err,protocol){
+        if(err){
+            console.log('find err');
+            return;
+        }
+        if(!protocol){
+            req.flash('error','该选择项不存在');
+            res.redirect('/collocation/protocol');
+        }
+        return res.json(protocol);  //将查询到的结果返回给页面
+    });
+});
+//编辑协议信息
+router.post('/protocol/:protocolId/edit',checkLogin,function(req,res,next){
+    var protocolId=req.params.protocolId;
+    var title=req.fields.title_e;
+    var content=req.fields.content_e;
+    var note=req.fields.note_e;
+
+    //参数校验
+    try{
+        if(!title){
+            throw new Error('请填写协议标题');
+        }
+        if(!content){
+            throw new Error('请填写协议内容');
+        }
+    }catch(e){
+        req.flash('error', e.message);
+        return res.redirect('back');
+    }
+
+    var protocol={
+        title:title,
+        content:content,
+        note:note
+    };
+
+    Protocol.update({_id:protocolId},{$set:protocol},function(err){
+        if(err){
+            console.log('err');
+            req.flash('error','更新失败');
+            return res.redirect('back');
+        }
+        req.flash('success','更新成功');
+        res.redirect('/collocation/protocol');
+    });
+});
+//删除酒店信息
+router.post('/protocol/remove',checkLogin,function(req,res,next){
+    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
+    //console.log(typeof(selStr));
+    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
+    //console.log(selJson+' '+typeof(selJson));
+    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
+        Protocol.remove({_id:selJson[i]},function(err){
+            if(err){
+                console.log('del err',err);
+                return;
+            }
+        })
+    }
+    req.flash('success','删除成功');
+    return res.json({'success':'删除成功'});
+});
+
+
 //设备管理
 router.get('/equipment',function(req,res,next){
     //查询设备和酒店信息，并显示

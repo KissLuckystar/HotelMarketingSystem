@@ -13,5 +13,7 @@ module.exports=function(){
     require('../models/hotel.server.model.js');
     //引入设备信息model
     require('../models/device.server.model.js');
+    //引入协议信息model
+    require('../models/protocol.server.model.js');
     return db;//返回数据库实例
 };

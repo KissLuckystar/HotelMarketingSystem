@@ -78,6 +78,36 @@ $(function(){
     });
 
 
+    //协议信息编辑
+    $('#edit_protocol').click(function(){
+        var selList=getChecked(); //获取到已选择项的value值
+        if(selList.length==0){
+            alert('请选择要编辑的选项！');
+        }else if(selList.length>1){
+            alert('请选择一项进行编辑！');
+        }else{
+            $.ajax({
+                url:'/collocation/protocol/'+selList[0]+'/edit',
+                type:'GET',//POST,GET
+                async:true,//是否异步
+                data:{_id:selList[0]},
+                dataType:'json',
+                success:function(data){
+                    $('#title_e').val(data.title);
+                    $('#content_e').val(data.content);
+                    $('#note_e').val(data.note);
+                    //设置form的action地址
+                    $('#editForm').attr('action','/collocation/protocol/'+data._id+'/edit');  //设置form表单的action地址
+                    $('#editModal').modal('show');
+                },
+                error:function(xhr,textStatus){
+                    console.log(xhr+textStatus);
+                }
+            })
+        }
+    });
+
+
     //删除
     $('#delete').click(function(){
         var selList=getChecked();
