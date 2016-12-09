@@ -1,0 +1,7 @@
+.con_table{
+    margin: 10px 50px;
+    padding:50px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}

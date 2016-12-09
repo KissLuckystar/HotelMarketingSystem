@@ -108,6 +108,109 @@ $(function(){
     });
 
 
+    //班组信息编辑
+    $('#edit_group').click(function(){
+        var selList=getChecked(); //获取到已选择项的value值
+        if(selList.length==0){
+            alert('请选择要编辑的选项！');
+        }else if(selList.length>1){
+            alert('请选择一项进行编辑！');
+        }else{
+            $.ajax({
+                url:'/collocation/group/'+selList[0]+'/edit',
+                type:'GET',//POST,GET
+                async:true,//是否异步
+                data:{_id:selList[0]},
+                dataType:'json',
+                success:function(data){
+                    $('#name_e').val(data.name);
+                    $('#hotel_e').val(data.hotel);
+                    $('#group_code_e').val(data.group_code);
+                    $('#begin_time_e').val(data.begin_time);
+                    $('#end_time_e').val(data.end_time);
+                    $('#note_e').val(data.note);
+                    //设置form的action地址
+                    $('#editForm').attr('action','/collocation/group/'+data._id+'/edit');  //设置form表单的action地址
+                    $('#editModal').modal('show');
+                },
+                error:function(xhr,textStatus){
+                    console.log(xhr+textStatus);
+                }
+            })
+        }
+    });
+
+    //用户组信息编辑
+    $('#edit_usergroup').click(function(){
+        var selList=getChecked(); //获取到已选择项的value值
+        if(selList.length==0){
+            alert('请选择要编辑的选项！');
+        }else if(selList.length>1){
+            alert('请选择一项进行编辑！');
+        }else{
+            $.ajax({
+                url:'/authority/usergroup/'+selList[0]+'/edit',
+                type:'GET',//POST,GET
+                async:true,//是否异步
+                data:{_id:selList[0]},
+                dataType:'json',
+                success:function(data){
+                    $('#name_e').val(data.name);
+                    $('#hotel_e').val(data.hotel);
+                    $('#authority_e').val(data.authority);
+                    $('#note_e').val(data.note);
+                    //设置form的action地址
+                    $('#editForm').attr('action','/authority/usergroup/'+data._id+'/edit');  //设置form表单的action地址
+                    $('#editModal').modal('show');
+                },
+                error:function(xhr,textStatus){
+                    console.log(xhr+textStatus);
+                }
+            })
+        }
+    });
+
+    //用户组信息编辑
+    $('#edit_user').click(function(){
+        var selList=getChecked(); //获取到已选择项的value值
+        if(selList.length==0){
+            alert('请选择要编辑的选项！');
+        }else if(selList.length>1){
+            alert('请选择一项进行编辑！');
+        }else{
+            $.ajax({
+                url:'/authority/user/'+selList[0]+'/edit',
+                type:'GET',//POST,GET
+                async:true,//是否异步
+                data:{_id:selList[0]},
+                dataType:'json',
+                success:function(data){
+                    $('#userName_e').val(data.userName);
+                    $('#userId_e').val(data.userId);
+                    $('#userPassword_e').val(data.userPassword);
+                    if(data.userSex=='f'){
+                        $('#female_e').attr('checked',true);
+                    }
+                    $('#userPhone_e').val(data.userPhone);
+                    $('#userHotelCode_e').val(data.userHotelCode);
+                    $('#userClassCode_e').val(data.userClassCode);
+                    if(data.userStatus=='n'){
+                        $('#userStatus_n_e').attr('checked',true);
+                    }
+                    $('#userStatus_e').val(data.userStatus);
+                    $('#note_e').val(data.note);
+                    //设置form的action地址
+                    $('#editForm').attr('action','/authority/user/'+data._id+'/edit');  //设置form表单的action地址
+                    $('#editModal').modal('show');
+                },
+                error:function(xhr,textStatus){
+                    console.log(xhr+textStatus);
+                }
+            })
+        }
+    });
+
+
     //删除
     $('#delete').click(function(){
         var selList=getChecked();

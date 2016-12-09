@@ -12,4 +12,6 @@ module.exports=function(app){
     app.use('/mainIndex',require('./mainIndex'));//首页
     //子功能路由区
     app.use('/collocation',require('./collocation'));//配置管理
+    app.use('/authority',require('./authority'));//权限管理
+    app.use('/marketinginfo',require('./activity'));//权限管理
 };

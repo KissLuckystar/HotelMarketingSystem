@@ -15,5 +15,12 @@ module.exports=function(){
     require('../models/device.server.model.js');
     //引入协议信息model
     require('../models/protocol.server.model.js');
+    //引入班组信息model
+    require('../models/group.server.model.js');
+    //引入用户组信息model
+    require('../models/usergroup.server.model.js');
+
+    //引入活动信息model
+    require('../models/activity.server.model.js');
     return db;//返回数据库实例
 };
