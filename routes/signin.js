@@ -27,13 +27,16 @@ router.post('/',checkNotLogin,function(req,res,next){
             res.end('login failed');
         }
         if(!user){
+            console.log('用户不存在');
             req.flash('error','用户不存在');
             return res.redirect('/signin');
         }
         //生成密码的md5值
         var md5 = crypto.createHash('md5');
         password = md5.update(password).digest('hex');
+        console.log(password);
         if (user.userPassword != password) {
+            console.log('密码错误');
             req.flash('error', '密码错误');
             return res.redirect('/signin');
         }

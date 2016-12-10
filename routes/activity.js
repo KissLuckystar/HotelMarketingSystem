@@ -71,7 +71,7 @@ router.post('/marketingactive/add',checkLogin,function(req,res,next){
         create_time:time.minute
     });
 
-    console.log(activity);
+    //console.log(activity);
 
     activity.save(function(err){
         if(err){
@@ -85,37 +85,37 @@ router.post('/marketingactive/add',checkLogin,function(req,res,next){
     });
 });
 //编辑用户组信息
-router.get('/usergroup/:id/edit',checkLogin,function(req,res,next){
+router.get('/marketingactive/:id/edit',checkLogin,function(req,res,next){
 
     var Id=req.params.id; //获取要编辑的项
 
     //查询选择项的信息
-    UserGroup.findOne({_id:Id},function(err,usergroup){
+    Activity.findOne({_id:Id},function(err,activity){
         if(err){
             console.log('find err');
             return;
         }
-        if(!usergroup){
+        if(!activity){
             req.flash('error','该选择项不存在');
-            res.redirect('/authority/usergroup');
+            res.redirect('/marketinginfo/marketingactive');
         }
-        return res.json(usergroup);  //将查询到的结果返回给页面
+        return res.json(activity);  //将查询到的结果返回给页面
     });
 });
 //编辑用户组信息
-router.post('/usergroup/:id/edit',checkLogin,function(req,res,next){
+router.post('/marketingactive/:id/edit',checkLogin,function(req,res,next){
     var id=req.params.id;
-    var name=req.fields.name_e;
-    var hotel=req.fields.hotel_e;
-    var authority=req.fields.authority_e;
-    var note=req.fields.note_e;
+    var title=req.fields.title_e;
+    var content=req.fields.content_e;
+    var file=req.files.file_e.path.split(path.sep).pop();
+    var status=req.fields.status_e;
 
     //参数校验
     try{
-        if(!name){
+        if(!title){
             throw new Error('请填写用户组名称');
         }
-        if(!hotel){
+        if(!content){
             throw new Error('请填写所属酒店');
         }
     }catch(e){
@@ -123,29 +123,29 @@ router.post('/usergroup/:id/edit',checkLogin,function(req,res,next){
         return res.redirect('back');
     }
 
-    var usergroup={
-        name:name,
-        hotel:hotel,
-        authority:authority,
-        note:note
+    var activity={
+        title:title,
+        content:content,
+        file:file,
+        status:status
     };
 
-    UserGroup.update({_id:id},{$set:usergroup},function(err){
+    Activity.update({_id:id},{$set:activity},function(err){
         if(err){
             console.log('err');
             req.flash('error','更新失败');
             return res.redirect('back');
         }
         req.flash('success','更新成功');
-        res.redirect('/authority/usergroup');
+        res.redirect('/marketinginfo/marketingactive');
     });
 });
 //删除用户组信息
-router.post('/usergroup/remove',checkLogin,function(req,res,next){
+router.post('/marketingactive/remove',checkLogin,function(req,res,next){
     var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
     var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
     for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        UserGroup.remove({_id:selJson[i]},function(err){
+        Activity.remove({_id:selJson[i]},function(err){
             if(err){
                 console.log('del err',err);
                 return;

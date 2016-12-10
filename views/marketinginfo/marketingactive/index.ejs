@@ -41,7 +41,7 @@
             <td><%= activity.title %></td>
             <td><%= activity.publisher.userName %></td>
             <td><%= activity.content %></td>
-            <td><img src="images/<%= activity.file %>" alt="活动附件"/></td>
+            <td><img src="/images/<%= activity.file %>" alt="活动附件"/></td>
             <td><%= ({'l':'未开始','y':'已开始','n':'已结束'})[activity.status] %></td>
             <td><%= activity.create_time %></td>
         </tr>
@@ -117,15 +117,15 @@
                 <div class="modal-body">
                     <div>
                         <label for="">活动标题:</label>
-                        <input type="text" name="title_e"/>
+                        <input type="text" id="title_e" name="title_e"/>
                     </div>
                     <div>
                         <label for="">活动内容:</label>
-                        <input type="text" name="content_e"/>
+                        <input type="text" id="content_e" name="content_e"/>
                     </div>
                     <div>
                         <label for="">活动附件:</label>
-                        <input type="file" name="file_e"/>
+                        <input type="file" id="file_e" name="file_e"/>
                     </div>
                     <div>
                         <label for="">活动状态:</label>
