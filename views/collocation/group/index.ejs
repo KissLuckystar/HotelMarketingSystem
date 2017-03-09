@@ -58,7 +58,7 @@
     </table>
     <div>
         <form action="" class="form-inline">
-            共1条记录，第1/1页
+            共3条记录，第1/1页
             <div class="input-group">
                 <input type="text" class="form-control" >
                         <span class="input-group-btn">
@@ -81,37 +81,49 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">新增酒店信息</h4>
+                <h4 class="modal-title" id="myModalLabel">新增班组信息</h4>
             </div>
-            <form action="/collocation/group/add" method="post">
+            <form action="/collocation/group/add" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">班组名称:</label>
-                        <input type="text" name="name"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">班组名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="name" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">所属酒店:</label>
-                        <select name="hotel">
-                            <% hotels.forEach(function(hotel){ %>
-                            <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
-                            <% }) %>
-                        </select>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">所属酒店:</label>
+                        <div class="col-sm-10">
+                            <select name="hotel" class="form-control">
+                                <% hotels.forEach(function(hotel){ %>
+                                <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">所属用户组:</label>
-                        <input type="text" name="group_code"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">用户组:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="group_code" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">开始时间:</label>
-                        <input type="text" name="begin_time"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">开始时间:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="begin_time" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">结束时间:</label>
-                        <input type="text" name="end_time"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">结束时间:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="end_time" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">备注:</label>
-                        <input type="text" name="note"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">备注:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="note" class="form-control"/>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -129,37 +141,49 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">编辑酒店信息</h4>
+                <h4 class="modal-title" id="myModalLabel">编辑班组信息</h4>
             </div>
-            <form id="editForm" action="" method="post">
+            <form id="editForm" action="" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">班组名称:</label>
-                        <input type="text" id="name_e" name="name_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">班组名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="name_e" name="name_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">所属酒店:</label>
-                        <select id="hotel_e" name="hotel_e">
-                            <% hotels.forEach(function(hotel){ %>
-                            <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
-                            <% }) %>
-                        </select>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">所属酒店:</label>
+                        <div class="col-sm-10">
+                            <select id="hotel_e" name="hotel_e" class="form-control">
+                                <% hotels.forEach(function(hotel){ %>
+                                <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">所属用户组:</label>
-                        <input type="text" id="group_code_e" name="group_code_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">所属用户组:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="group_code_e" name="group_code_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">开始时间:</label>
-                        <input type="text" id="begin_time_e" name="begin_time_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">开始时间:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="begin_time_e" name="begin_time_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">结束时间:</label>
-                        <input type="text" id="end_time_e" name="end_time_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">结束时间:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="end_time_e" name="end_time_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">备注:</label>
-                        <input type="text" id="note_e" name="note_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">备注:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="note_e" name="note_e" class="form-control"/>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

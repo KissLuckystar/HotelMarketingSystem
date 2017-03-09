@@ -1,5 +1,6 @@
 /**
  * Created by smk on 2016/12/9.
+ * 营销信息模块
  */
 var express=require('express');
 var router=express.Router();
@@ -10,7 +11,7 @@ mongoose.Promise =global.Promise;//解决（mongoose's default promise library) 
 
 var checkLogin=require('../middlewares/checkLogin').checkLogin;
 
-//用户组页面
+//营销页面
 router.get('/marketingactive',checkLogin,function(req,res,next){
     Activity.find({})
         .populate({path:'publisher',model:'User'})
@@ -29,7 +30,7 @@ router.get('/marketingactive',checkLogin,function(req,res,next){
             });
         });
 });
-//新增用户组信息
+//新增营销信息
 router.post('/marketingactive/add',checkLogin,function(req,res,next){
     var publisher=req.session.user._id;
     var title=req.fields.title;
@@ -51,10 +52,10 @@ router.post('/marketingactive/add',checkLogin,function(req,res,next){
     //参数校验
     try{
         if(!title){
-            throw new Error('请填写用户组名称');
+            throw new Error('请填写活动标题');
         }
         if(!content){
-            throw new Error('请填写所属酒店');
+            throw new Error('请填写活动内容');
         }
     }catch(e){
         console.log('参数校验未通过');
@@ -84,7 +85,7 @@ router.post('/marketingactive/add',checkLogin,function(req,res,next){
         res.redirect('/marketinginfo/marketingactive');
     });
 });
-//编辑用户组信息
+//编辑营销信息
 router.get('/marketingactive/:id/edit',checkLogin,function(req,res,next){
 
     var Id=req.params.id; //获取要编辑的项
@@ -102,7 +103,7 @@ router.get('/marketingactive/:id/edit',checkLogin,function(req,res,next){
         return res.json(activity);  //将查询到的结果返回给页面
     });
 });
-//编辑用户组信息
+//编辑营销信息
 router.post('/marketingactive/:id/edit',checkLogin,function(req,res,next){
     var id=req.params.id;
     var title=req.fields.title_e;
@@ -113,10 +114,10 @@ router.post('/marketingactive/:id/edit',checkLogin,function(req,res,next){
     //参数校验
     try{
         if(!title){
-            throw new Error('请填写用户组名称');
+            throw new Error('请填写活动标题');
         }
         if(!content){
-            throw new Error('请填写所属酒店');
+            throw new Error('请填写活动内容');
         }
     }catch(e){
         req.flash('error', e.message);
@@ -140,7 +141,7 @@ router.post('/marketingactive/:id/edit',checkLogin,function(req,res,next){
         res.redirect('/marketinginfo/marketingactive');
     });
 });
-//删除用户组信息
+//删除营销信息
 router.post('/marketingactive/remove',checkLogin,function(req,res,next){
     var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
     var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象

@@ -19,6 +19,10 @@ module.exports=function(){
     require('../models/group.server.model.js');
     //引入用户组信息model
     require('../models/usergroup.server.model.js');
+    //引入APP用户信息model
+    require('../models/appuser.server.model.js');
+    //引入产品信息model
+    require('../models/product.server.model.js');
 
     //引入活动信息model
     require('../models/activity.server.model.js');

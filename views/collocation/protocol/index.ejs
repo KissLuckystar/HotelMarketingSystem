@@ -52,7 +52,7 @@
     </table>
     <div>
         <form action="" class="form-inline">
-            共2条记录，第1/1页
+            共1条记录，第1/1页
             <div class="input-group">
                 <input type="text" class="form-control" >
                         <span class="input-group-btn">
@@ -77,20 +77,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">新增协议信息</h4>
             </div>
-            <form action="/collocation/protocol/add" method="post">
+            <form action="/collocation/protocol/add" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">协议标题:</label>
-                        <input type="text" name="title"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">协议标题:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">协议内容:</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">协议内容:</label>
                         <!--<input type="text" name="content"/>-->
-                        <textarea name="content" id="content" cols="30" rows="10"></textarea>
+                        <div class="col-sm-10">
+                            <textarea name="content" id="content" cols="20" rows="5" class="form-control"></textarea>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">备注:</label>
-                        <input type="text" name="note"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">备注:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="note" class="form-control"/>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -110,20 +116,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">编辑协议信息</h4>
             </div>
-            <form id="editForm" action="" method="post">
+            <form id="editForm" action="" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">协议标题:</label>
-                        <input type="text" id="title_e" name="title_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">协议标题:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="title_e" name="title_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">协议内容:</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">协议内容:</label>
                         <!--<input type="text" id="content_e" name="content_e"/>-->
-                        <textarea name="content_e" id="content_e" cols="30" rows="10"></textarea>
+                        <div class="col-sm-10">
+                            <textarea name="content_e" id="content_e" cols="20" rows="5" class="form-control"></textarea>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">备注:</label>
-                        <input type="text" id="note_e" name="note_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">备注:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="note_e" name="note_e" class="form-control"/>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -170,7 +170,7 @@ $(function(){
         }
     });
 
-    //用户组信息编辑
+    //用户信息编辑
     $('#edit_user').click(function(){
         var selList=getChecked(); //获取到已选择项的value值
         if(selList.length==0){
@@ -211,7 +211,7 @@ $(function(){
     });
 
 
-    //用户组信息编辑
+    //营销信息编辑
     $('#edit_activeinfo').click(function(){
         var selList=getChecked(); //获取到已选择项的value值
         if(selList.length==0){

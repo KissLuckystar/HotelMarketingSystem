@@ -235,12 +235,12 @@ router.get('/group/:groupId/edit',checkLogin,function(req,res,next){
     var groupId=req.params.groupId; //获取要编辑的项
 
     //查询选择项的信息
-    Group.findOne({_id:groupId},function(err,hotel){
+    Group.findOne({_id:groupId},function(err,group){
         if(err){
             console.log('find err');
             return;
         }
-        if(!hotel){
+        if(!group){
             req.flash('error','该选择项不存在');
             res.redirect('/collocation/group');
         }

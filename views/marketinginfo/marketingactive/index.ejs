@@ -50,7 +50,7 @@
     </table>
     <div>
         <form action="" class="form-inline">
-            共10000条记录，第1/100页
+            共2条记录，第1/1页
             <div class="input-group">
                 <input type="text" class="form-control" >
                         <span class="input-group-btn">
@@ -75,25 +75,33 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">新增营销活动信息</h4>
             </div>
-            <form action="/marketinginfo/marketingactive/add" method="post" enctype="multipart/form-data">
+            <form action="/marketinginfo/marketingactive/add" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">活动标题:</label>
-                        <input type="text" name="title"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动标题:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">活动内容:</label>
-                        <input type="text" name="content"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动内容:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="content" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">活动附件:</label>
-                        <input type="file" name="file"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动附件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="file"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">活动状态:</label>
-                        <input type="radio" name="status" id="status_l" value="l" checked/><label for="userStatus_l">未开始</label>
-                        <input type="radio" name="status" id="status_y" value="y"/><label for="userStatus_y">已开始</label>
-                        <input type="radio" name="status" id="status_n" value="n"/><label for="userStatus_n">已结束</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动状态:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="status" id="status_l" value="l" checked/><label for="userStatus_l">未开始</label>
+                            <input type="radio" name="status" id="status_y" value="y"/><label for="userStatus_y">已开始</label>
+                            <input type="radio" name="status" id="status_n" value="n"/><label for="userStatus_n">已结束</label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -111,27 +119,35 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">编辑酒店信息</h4>
+                <h4 class="modal-title" id="myModalLabel">编辑营销活动信息</h4>
             </div>
-            <form id="editForm" action="" method="post">
+            <form id="editForm" action="" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">活动标题:</label>
-                        <input type="text" id="title_e" name="title_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动标题:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="title_e" name="title_e"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">活动内容:</label>
-                        <input type="text" id="content_e" name="content_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动内容:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="content_e" name="content_e"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">活动附件:</label>
-                        <input type="file" id="file_e" name="file_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动附件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="file_e" name="file_e"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">活动状态:</label>
-                        <input type="radio" name="status_e" id="status_l_e" value="l" checked/><label for="userStatus_l_e">未开始</label>
-                        <input type="radio" name="status_e" id="status_y_e" value="y"/><label for="userStatus_y_e">已开始</label>
-                        <input type="radio" name="status_e" id="status_n_e" value="n"/><label for="userStatus_n_e">已结束</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动状态:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="status_e" id="status_l_e" value="l" checked/><label for="userStatus_l_e">未开始</label>
+                            <input type="radio" name="status_e" id="status_y_e" value="y"/><label for="userStatus_y_e">已开始</label>
+                            <input type="radio" name="status_e" id="status_n_e" value="n"/><label for="userStatus_n_e">已结束</label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -54,7 +54,7 @@
     </table>
     <div>
         <form action="" class="form-inline">
-            共10000条记录，第1/100页
+            共2条记录，第1/1页
             <div class="input-group">
                 <input type="text" class="form-control" >
                         <span class="input-group-btn">
@@ -79,53 +79,71 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">新增用户信息</h4>
             </div>
-            <form action="/authority/user/add" method="post">
+            <form action="/authority/user/add" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">姓名:</label>
-                        <input type="text" name="userName"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">姓名:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="userName" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">账号:</label>
-                        <input type="text" name="userId"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">账号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="userId" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">密码:</label>
-                        <input type="password" name="userPassword"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">密码:</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="userPassword" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">性别:</label>
-                        <input type="radio" name="userSex" id="male" value="m" checked/><label for="male">男</label>
-                        <input type="radio" name="userSex" id="female" value="f"/><label for="female">女</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">性别:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="userSex" id="male" value="m" checked/><label for="male">男</label>
+                            <input type="radio" name="userSex" id="female" value="f"/><label for="female">女</label>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">电话:</label>
-                        <input type="text" name="userPhone"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">电话:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="userPhone" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">所属酒店:</label>
-                        <select name="userHotelCode">
-                            <% hotels.forEach(function(hotel){ %>
-                            <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
-                            <% }) %>
-                        </select>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">所属酒店:</label>
+                        <div class="col-sm-10">
+                            <select name="userHotelCode" class="form-control">
+                                <% hotels.forEach(function(hotel){ %>
+                                <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">用户组:</label>
-                        <select name="userClassCode">
-                            <% usergroups.forEach(function(usergroup){ %>
-                            <option value="<%= usergroup.name %>"><%= usergroup.name %></option>
-                            <% }) %>
-                        </select>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">用户组:</label>
+                        <div class="col-sm-10">
+                            <select name="userClassCode" class="form-control">
+                                <% usergroups.forEach(function(usergroup){ %>
+                                <option value="<%= usergroup.name %>"><%= usergroup.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">状态:</label>
-                        <input type="radio" name="userStatus" id="userStatus_y" value="y" checked/><label for="userStatus_y">在职</label>
-                        <input type="radio" name="userStatus" id="userStatus_n" value="n"/><label for="userStatus_n">离职</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">状态:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="userStatus" id="userStatus_y" value="y" checked/><label for="userStatus_y">在职</label>
+                            <input type="radio" name="userStatus" id="userStatus_n" value="n"/><label for="userStatus_n">离职</label>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">备注:</label>
-                        <input type="text" name="note"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">备注:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="note" class="form-control"/>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -143,55 +161,73 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">编辑酒店信息</h4>
+                <h4 class="modal-title" id="myModalLabel">编辑用户信息</h4>
             </div>
-            <form id="editForm" action="" method="post">
+            <form id="editForm" action="" method="post" class="form-horizontal" role="form">
                 <div class="modal-body">
-                    <div>
-                        <label for="">姓名:</label>
-                        <input type="text" id="userName_e" name="userName_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">姓名:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="userName_e" name="userName_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">账号:</label>
-                        <input type="text" id="userId_e" name="userId_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">账号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="userId_e" name="userId_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">密码:</label>
-                        <input type="password" id="userPassword_e" name="userPassword_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">密码:</label>
+                        <div class="col-sm-10">
+                            <input type="password" id="userPassword_e" name="userPassword_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">性别:</label>
-                        <input type="radio" name="userSex_e" id="male_e" value="m" checked/><label for="male_e">男</label>
-                        <input type="radio" name="userSex_e" id="female_e" value="f"/><label for="female_e">女</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">性别:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="userSex_e" id="male_e" value="m" checked/><label for="male_e">男</label>
+                            <input type="radio" name="userSex_e" id="female_e" value="f"/><label for="female_e">女</label>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">电话:</label>
-                        <input type="text" id="userPhone_e" name="userPhone_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">电话:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="userPhone_e" name="userPhone_e" class="form-control"/>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">所属酒店:</label>
-                        <select id="userHotelCode_e" name="userHotelCode_e">
-                            <% hotels.forEach(function(hotel){ %>
-                            <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
-                            <% }) %>
-                        </select>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">所属酒店:</label>
+                        <div class="col-sm-10">
+                            <select id="userHotelCode_e" name="userHotelCode_e" class="form-control">
+                                <% hotels.forEach(function(hotel){ %>
+                                <option value="<%= hotel.hotel_name %>"><%= hotel.hotel_name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">用户组:</label>
-                        <select id="userClassCode_e" name="userClassCode_e">
-                            <% usergroups.forEach(function(usergroup){ %>
-                            <option value="<%= usergroup.name %>"><%= usergroup.name %></option>
-                            <% }) %>
-                        </select>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">用户组:</label>
+                        <div class="col-sm-10">
+                            <select id="userClassCode_e" name="userClassCode_e" class="form-control">
+                                <% usergroups.forEach(function(usergroup){ %>
+                                <option value="<%= usergroup.name %>"><%= usergroup.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">状态:</label>
-                        <input type="radio" name="userStatus_e" id="userStatus_y_e" value="y" checked/><label for="userStatus_y_e">在职</label>
-                        <input type="radio" name="userStatus_e" id="userStatus_n_e" value="n"/><label for="userStatus_n_e">离职</label>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">状态:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="userStatus_e" id="userStatus_y_e" value="y" checked/><label for="userStatus_y_e">在职</label>
+                            <input type="radio" name="userStatus_e" id="userStatus_n_e" value="n"/><label for="userStatus_n_e">离职</label>
+                        </div>
                     </div>
-                    <div>
-                        <label for="">备注:</label>
-                        <input type="text" id="note_e" name="note_e"/>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">备注:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="note_e" name="note_e" class="form-control"/>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
