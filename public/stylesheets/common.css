@@ -1,0 +1,25 @@
+.logo {
+    height:40px;
+    line-height:40px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    float:left;
+    padding-left: 15px;
+}
+.logout {
+    float:right;
+    padding:20px 15px 0 0;
+}
+a {
+    text-decoration:none;
+    color:black;
+}
+a:hover {
+    text-decoration:underline;
+    color:red;
+}
+
+#menu .nav_btn{
+    padding: 10px;
+}

@@ -27,7 +27,7 @@ router.get('/app_product',function(req,res,next){
                 'items':products
             });
         })
-    }else{
+    }else if(classify=='all'){
         Product.find({},function(err,products){
             if(err){
                 console.log('find device err',err);
@@ -41,6 +41,31 @@ router.get('/app_product',function(req,res,next){
                 'items':products
             });
         })
+    }else{
+        classify=new RegExp(classify,'i');//不区分大小写
+        Product.find({                       //多条件模糊查询
+            $or:[
+                {name:{$regex:classify}},
+                {note:{$regex:classify}}
+            ]
+        },null,{
+            sort:{_id:-1},
+            limit:100
+        },function(err,products){
+            if(err){
+                console.log('find device err',err);
+            }
+            if(!products){
+                console.log('列表为空');
+                res.send({
+                    'total_count':0
+                });
+            }
+            res.send({
+                'total_count':products.length,
+                'items':products
+            });
+        })
     }
 
 });
@@ -48,6 +73,11 @@ router.get('/app_product',function(req,res,next){
 
 
 /** APP路由 end **/
+
+router.get('/customization',function(req,res,next){
+    res.render('product/customization/index');
+});
+
 
 
 module.exports=router;

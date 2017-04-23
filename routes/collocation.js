@@ -13,22 +13,49 @@ var Group=mongoose.model('Group');
 mongoose.Promise =global.Promise;//解决（mongoose's default promise library) is deprecated
 
 var checkLogin=require('../middlewares/checkLogin').checkLogin;
+var dbHelper = require('../middlewares/dbHelper');
 
 //酒店管理页面
 router.get('/hotel',checkLogin,function(req,res,next){
-    //查询酒店信息，并显示
-    Hotel.find({},function(err,hotels){
-        if(err){
-            console.log('find hotel err',err);
-        }
-        if(!hotels){
-            throw new Error('列表为空');
-        }
-        res.render('collocation/hotel/index',{
-            hotels:hotels
+    res.render('collocation/hotel/index');
+});
+//查询酒店列表，条件查询
+router.post('/hotel/data',checkLogin,function(req,res,next){
+    var page=req.fields.page;   //页数
+    var rows=req.fields.rows;   //记录数
+    var search_hotel=req.fields.search_hotel;   //记录数
+    if(search_hotel){
+        var hotel_name=new RegExp(search_hotel, 'i');   //不区分大小写
+        var queryParams={
+            hotel_name:{$regex : hotel_name}
+        };
+        /**
+         * $page对象包含三个属性：pageNumber:当前页数（从1开始）；pageCount：总页数；length：总记录数；results:当前页的记录
+         * page默认从1开始，计算skip的参数为(page-1)*rows
+         * 往前台返回的数据不仅要返回分页后的数据，还要返回数据的总数
+         */
+        dbHelper.pageQuery(page,rows,Hotel,'',queryParams,{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
         });
-    });
-
+    }else{
+        dbHelper.pageQuery(page,rows,Hotel,'',{},{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
+        });
+    }
 });
 //新增酒店信息
 router.post('/hotel/add',checkLogin,function(req,res,next){
@@ -36,123 +63,78 @@ router.post('/hotel/add',checkLogin,function(req,res,next){
     var hotel_address=req.fields.hotel_address;
     var phone=req.fields.phone;
     var note=req.fields.note;
-
-    //参数校验
-    try{
-        if(!hotel_name){
-            throw new Error('请填写酒店名称');
-        }
-        if(!hotel_address){
-            throw new Error('请填写酒店地址');
-        }
-        if(!phone){
-            throw new Error('请填写酒店电话');
-        }
-    }catch(e){
-        console.log('参数校验未通过');
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+    var data={
+        state : 0,
+    };
     var hotel=new Hotel({
         hotel_name:hotel_name,
         hotel_address:hotel_address,
         phone:phone,
         note:note
     });
-
     hotel.save(function(err){
         if(err){
-            req.flash('error','新增失败');
-            return res.redirect('back');
+            console.log('error','新增失败');
+            return res.send(data);
         }
-        req.flash('success','新增成功');
-        res.redirect('/collocation/hotel');
+        data.state=1;
+        return res.send(data);
     });
 });
-//编辑酒店信息
-router.get('/hotel/:hotelId/edit',checkLogin,function(req,res,next){
-
-    var hotelId=req.params.hotelId; //获取要编辑的项
-    console.log(hotelId);
-
+//获取要编辑的酒店信息
+router.post('/hotel/edit',checkLogin,function(req,res,next){
+    var id=req.fields.id; //获取要编辑的项
+    console.log(id);
     //查询选择项的信息
-    Hotel.findOne({_id:hotelId},function(err,hotel){
+    Hotel.findOne({_id:id},function(err,hotel){
         if(err){
             console.log('find err');
             return;
         }
         if(!hotel){
-            req.flash('error','该选择项不存在');
-            res.redirect('/collocation/hotel');
+            console.log('error','该选择项不存在');
         }
-        //console.log(hotel);
-        //res.render('')
-        return res.json(hotel);  //将查询到的结果返回给页面
+        return res.json(hotel);
     });
 });
 //编辑酒店信息
-router.post('/hotel/:hotelId/edit',checkLogin,function(req,res,next){
-    var hotelId=req.params.hotelId;
-    var hotel_name=req.fields.hotel_name_e;
-    var hotel_address=req.fields.hotel_address_e;
-    var phone=req.fields.phone_e;
-    var note=req.fields.note_e;
-
-    //参数校验
-    try{
-        if(!hotel_name){
-            throw new Error('请填写酒店名称');
-        }
-        if(!hotel_address){
-            throw new Error('请填写酒店地址');
-        }
-        if(!phone){
-            throw new Error('请填写酒店电话');
-        }
-    }catch(e){
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+router.post('/hotel/update',checkLogin,function(req,res,next){
+    var id=req.fields.id;
+    var hotel_name=req.fields.hotel_name;
+    var hotel_address=req.fields.hotel_address;
+    var phone=req.fields.phone;
+    var note=req.fields.note;
+    var data={
+        state : 0,
+    };
     var hotel={
         hotel_name:hotel_name,
         hotel_address:hotel_address,
         phone:phone,
         note:note
     };
-
-    Hotel.update({_id:hotelId},{$set:hotel},function(err){
+    Hotel.update({_id:id},{$set:hotel},function(err){
         if(err){
             console.log('err');
-            req.flash('error','更新失败');
-            return res.redirect('back');
+            return res.send(data);
         }
-        req.flash('success','更新成功');
-        res.redirect('/collocation/hotel');
+        data.state=1;
+        return res.send(data);
     });
 });
 //删除酒店信息
 router.post('/hotel/remove',checkLogin,function(req,res,next){
-    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
-    //console.log(typeof(selStr));
-    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
-    //console.log(selJson+' '+typeof(selJson));
-    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        //console.log(selJson[i]);
-        Hotel.remove({_id:selJson[i]},function(err){
+    var idStr=req.fields.ids;
+    var ids=idStr.split(',');
+    for(var i = 0; i < ids.length ; i++ ){
+        Hotel.remove({_id:ids[i]},function(err){
             if(err){
                 console.log('del err',err);
-                return;
+                return res.json({'affected_rows':0});
             }
         })
     }
-    //console.log(req.params);  //为空
-    //console.log(req.body);    //为空
-    //console.log(req.query);   //为空
-    req.flash('success','删除成功');
-    //res.redirect('/collocation/hotel');
-    return res.json({'success':'删除成功'});
+    return res.json({'affected_rows':ids.length});
 });
 //班组管理
 router.get('/group',function(req,res,next){

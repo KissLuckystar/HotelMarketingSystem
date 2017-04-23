@@ -13,7 +13,7 @@ module.exports=function(app){
     //子功能路由区
     app.use('/collocation',require('./collocation'));//配置管理
     app.use('/authority',require('./authority'));//权限管理
-    app.use('/marketinginfo',require('./activity'));//权限管理
+    app.use('/marketinginfo',require('./marketinginfo'));//权限管理
     app.use('/accountbill',require('./accountbill'));//账户账单
     app.use('/product',require('./product'));//账户账单
 };

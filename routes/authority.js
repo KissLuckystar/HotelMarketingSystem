@@ -5,13 +5,77 @@
 var express=require('express');
 var router=express.Router();
 var crypto=require('crypto');//用于加密
+var async=require('async');
 var mongoose=require('mongoose');
 var Hotel=mongoose.model('Hotel');
 var UserGroup=mongoose.model('UserGroup');
 var User=mongoose.model('User');
+var UserFunc=mongoose.model('UserFunc');
 mongoose.Promise =global.Promise;//解决（mongoose's default promise library) is deprecated
 
 var checkLogin=require('../middlewares/checkLogin').checkLogin;
+
+router.get('/userfunc/:name',function(req,res,next){
+    var name=req.params.name;
+    UserFunc.findOne({name:name},function(err,func){
+        if(err){
+            return;
+        }else if(!func){
+            return res.json([]);
+        }else{
+            UserFunc.find({nid:func.id},function(err,funcs){
+                if(err){
+                    return;
+                } else {
+                    var json=[];
+                    for(var i=0;i<funcs.length;i++){
+                        var obj={
+                            "id" : funcs[i].id,
+                            "text" : funcs[i].text,
+                            "iconCls" : funcs[i].iconCls,
+                            "url" : funcs[i].url,
+                        };
+                        json.push(obj);
+                    }
+                    res.json(json);
+                }
+            });
+        }
+    });
+    // var json=[{
+    //     "id" : 1,
+    //     "text" : "系统管理",
+    //     "iconCls" : "icon-save",
+    //     "children" : [{
+    //         "text" : "主机信息",
+    //         "checked" : false,
+    //         "state" : "closed",
+    //         "children" : [{
+    //             "text" : "版本信息"
+    //         },{
+    //             "text" : "程序信息"
+    //         }]
+    //     },{
+    //         "text" : "更新信息",
+    //         "checked" : true,
+    //         "attributes" : {
+    //             "url":"/demo/book/abc",
+    //             "price":100
+    //         }
+    //     },{
+    //         "text" : "程序信息"
+    //     }]
+    // },{
+    //     "id" : 2,
+    //     "text" : "会员管理",
+    //     "children" : [{
+    //         "text" : "新增会员"
+    //     },{
+    //         "text" : "审核会员"
+    //     }]
+    // }];
+    // res.json(json);
+});
 
 //用户组页面
 router.get('/usergroup',checkLogin,function(req,res,next){

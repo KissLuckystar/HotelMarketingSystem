@@ -4,6 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+require('events').EventEmitter.prototype._maxListeners = 0; //重新设置监听，解决possible EventEmitter memory leak detected的警告
+var JPush = require('jpush-sdk');
+var client = JPush.buildClient('c4fa54cfbbe7d5556007239c', 'd540b0f2ccf3fca48340548e');
 
 var session = require('express-session');//引入session模块
 var MongoStore=require('connect-mongo')(session);
@@ -103,6 +106,29 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+// full push .
+// client.push().setPlatform('ios', 'android')
+//     .setAudience(JPush.tag('555', '666'), JPush.alias('666,777'))
+//     .setNotification('Hi, JPush', JPush.ios('ios alert'), JPush.android('android alert', null, 1))
+//     .setMessage('msg content')
+//     .setOptions(null, 60)
+//     .send(function (err, res) {
+//         if (err) {
+//             if (err instanceof JPush.APIConnectionError) {
+//                 console.log(err.message)
+//                 // Response Timeout means your request to the server may have already received,
+//                 // please check whether or not to push
+//                 console.log(err.isResponseTimeout)
+//             } else if (err instanceof JPush.APIRequestError) {
+//                 console.log(err.message)
+//             }
+//         } else {
+//             console.log('Sendno: ' + res.sendno)
+//             console.log('Msg_id: ' + res.msg_id)
+//         }
+//     })
+
 
 
 module.exports = app;

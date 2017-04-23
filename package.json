@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "async": "^2.3.0",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
     "body-parser": "~1.15.1",
@@ -20,6 +21,7 @@
     "express": "~4.13.4",
     "express-formidable": "^1.0.0",
     "express-session": "^1.14.2",
+    "jpush-sdk": "^3.3.7",
     "jsx-loader": "^0.13.2",
     "mongoose": "^4.6.6",
     "morgan": "~1.7.0",

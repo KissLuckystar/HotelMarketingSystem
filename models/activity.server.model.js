@@ -5,12 +5,20 @@
 var mongoose=require('mongoose');
 
 var ActivitySchema=new mongoose.Schema({
-    publisher:mongoose.Schema.Types.ObjectId,
+    publisher:{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+    },
     title:String,
     content:String,
     file:String,
-    status:String,
-    create_time:{}
+    state:String,
+    begin_time:Date,
+    end_time:Date,
+    create_time:{
+        type:Date,
+        default:Date.now
+    }
 });
 
 mongoose.model('Activity',ActivitySchema);

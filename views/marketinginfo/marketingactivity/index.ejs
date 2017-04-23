@@ -1,0 +1,188 @@
+<script type="text/javascript" src="../easyui/extension/datagrid-detailview.js"></script>
+<script type="text/javascript" src="../javascripts/marketinginfo.js"></script>
+<table id="activity"></table>
+
+<div id="activity_tool" style="padding:5px;">
+    <div style="margin-bottom:5px;">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="marketing_tool.add();">添加</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="marketing_tool.edit();">修改</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="marketing_tool.remove();">删除</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-online" plain="true" onclick="marketing_tool.online();">上线</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-offline" plain="true" onclick="marketing_tool.offline();">下线</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="marketing_tool.reload();">刷新</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" id="redo" onclick="marketing_tool.redo();">取消选择</a>
+    </div>
+    <form id="activity_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            营销活动名称：<input type="text" class="textbox" name="search_activity" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="marketing_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="marketing_tool.reset();">重置</a>
+        </div>
+    </form>
+</div>
+
+<!--新增-->
+<form id="activity_add" method="post" enctype="multipart/form-data" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p>活动标题：<input type="text" name="title" class="textbox" style="width:200px;"></p>
+    <p>活动内容：<input type="text" name="content" class="textbox" style="width:200px;"></p>
+    <p>图片附件：<input type="text" id="picture" name="picture" style="width:200px;"></p>
+    <p>活动状态：<input type="text" id="state" name="state" style="width:200px;"></p>
+    <p>开始时间：<input type="text" id="begin_time" name="begin_time" style="width:200px;"></p>
+    <p>结束时间：<input type="text" id="end_time" name="end_time" style="width:200px;"></p>
+</form>
+
+<!--编辑-->
+<form id="activity_edit" method="post" enctype="multipart/form-data" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p><input type="hidden" name="id" class="textbox" style="width:200px;"></p>
+    <p>活动标题：<input type="text" name="title_edit" disabled="true" class="textbox" style="width:200px;"></p>
+    <p>活动内容：<input type="text" name="content_edit" class="textbox" style="width:200px;"></p>
+    <p>图片附件：<input type="text" id="picture_edit" name="picture_edit" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;发布人：<input type="text" name="publisher_edit" disabled="true" class="textbox" style="width:200px;"></p>
+    <p>活动状态：<input type="text" id="state_edit" name="state_edit" style="width:200px;"></p>
+    <p>开始时间：<input type="text" id="begin_time_edit" name="begin_time_edit" style="width:200px;"></p>
+    <p>结束时间：<input type="text" id="end_time_edit" name="end_time_edit" style="width:200px;"></p>
+    <p>创建时间：<input type="text" id="create_time_edit" name="create_time_edit" disabled="true" class="textbox" style="width:200px;"></p>
+</form>
+
+<!--
+
+            <th><input type="checkbox" name="sel" id="sel" alt="全选"/></th>
+            <th>活动标题</th>
+            <th>发布人</th>
+            <th>活动内容</th>
+            <th>活动附件</th>
+            <th>活动状态</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+ activitys.forEach(function(activity){
+        <tr>
+            <td><input type="checkbox" name="td_sel" class="td_sel" value=" activity._id "/></td>
+            <td> activity.title </td>
+            <td> activity.publisher.userName </td>
+            <td> activity.content </td>
+            <td><img src="/images/ activity.file " alt="活动附件"/></td>
+            <td>< ({'l':'未开始','y':'已开始','n':'已结束'})[activity.status] %></td>
+            <td> activity.create_time </td>
+        </tr>
+
+        </tbody>
+    </table>
+    <div>
+        <form action="" class="form-inline">
+            共2条记录，第1/1页
+            <div class="input-group">
+                <input type="text" class="form-control" >
+                        <span class="input-group-btn">
+                            <input type="button" class="btn btn-default" value="跳转">
+                        </span>
+            </div>
+            <div class="pull-right">
+                <a href="#">首页</a>
+                <a href="#">上一页</a>
+                <a href="#">下一页</a>
+                <a href="#">尾页</a>
+            </div>
+        </form>
+    </div>
+</div>
+-->
+<!-- 新增模态框(Modal)
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增营销活动信息</h4>
+            </div>
+            <form action="/marketinginfo/marketingactive/add" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动标题:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动内容:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="content" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动附件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="file"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动状态:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="status" id="status_l" value="l" checked/><label for="userStatus_l">未开始</label>
+                            <input type="radio" name="status" id="status_y" value="y"/><label for="userStatus_y">已开始</label>
+                            <input type="radio" name="status" id="status_n" value="n"/><label for="userStatus_n">已结束</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="提交"/>
+                    <input type="reset" class="btn btn-primary" value="重置"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+-->
+<!-- 编辑模态框(Modal)
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">编辑营销活动信息</h4>
+            </div>
+            <form id="editForm" action="" method="post" class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动标题:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="title_e" name="title_e"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动内容:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="content_e" name="content_e"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动附件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="file_e" name="file_e"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-2 control-label">活动状态:</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="status_e" id="status_l_e" value="l" checked/><label for="userStatus_l_e">未开始</label>
+                            <input type="radio" name="status_e" id="status_y_e" value="y"/><label for="userStatus_y_e">已开始</label>
+                            <input type="radio" name="status_e" id="status_n_e" value="n"/><label for="userStatus_n_e">已结束</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="更新"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../javascripts/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="../javascripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="../javascripts/hotel-common.js"></script>
+</body>
+</html>
+
+-->

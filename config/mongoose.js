@@ -23,6 +23,8 @@ module.exports=function(){
     require('../models/appuser.server.model.js');
     //引入产品信息model
     require('../models/product.server.model.js');
+    //引入用户功能model
+    require('../models/userfunc.server.model.js');
 
     //引入活动信息model
     require('../models/activity.server.model.js');

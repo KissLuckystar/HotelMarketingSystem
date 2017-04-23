@@ -14,7 +14,6 @@ var checkNotLogin=require('../middlewares/checkLogin').checkNotLogin;
 
 //用户登录页
 router.get('/',checkNotLogin,function(req,res,next){
-    console.log('3');
     res.render('signin');
 });
 

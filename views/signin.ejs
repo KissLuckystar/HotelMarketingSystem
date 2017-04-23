@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>登录</title>
+    <title><%= hotel.name %>登录</title>
     <link rel="stylesheet" href="/stylesheets/login.css"/>
     <script type="text/javascript" src="/javascripts/jquery-1.8.1.min.js"></script>
     <script>
@@ -38,13 +38,16 @@
 </head>
 <body>
     <div class="top_div"></div>
-    <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 200px; text-align: center;">
+    <div style="background: rgb(255, 255, 255); margin: -150px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 300px; text-align: center;">
         <div style="width: 165px; height: 96px; position: absolute;">
             <div class="tou"></div>
             <div class="initial_left_hand" id="left_hand"></div>
             <div class="initial_right_hand" id="right_hand"></div>
         </div>
         <form method="post">
+            <p style="position: relative;margin:30px auto 0px;font-size: 20px;">
+                <%= hotel.name %>
+            </p>
             <p style="padding: 30px 0px 10px; position: relative;">
                 <span class="u_logo"></span>
                 <input class="ipt" type="text" name="userId" placeholder="请输入用户ID" value="">
