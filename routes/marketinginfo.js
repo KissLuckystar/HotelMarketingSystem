@@ -84,7 +84,7 @@ router.post('/activity/add',function(req,res,next){
         begin_time:beginTime,
         end_time:endTime,
     });
-    console.log(activity);
+    //console.log(activity);
     activity.save(function(err){
         if(err){
             console.log('error','新增失败');

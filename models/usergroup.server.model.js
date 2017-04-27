@@ -6,10 +6,17 @@
 var mongoose=require('mongoose');
 
 var UserGroupSchema=new mongoose.Schema({
-    name:String,
-    hotel:String,
-    authority:String,
-    note:String
+    name:String,  //用户组名称
+    hotel_id:{   //所属酒店编号
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Hotel'
+    },
+    authority:String,   //用户组权限
+    create_time:{   //创建时间
+        type:Date,
+        default:Date.now
+    },
+    note:String   //备注
 });
 
 mongoose.model('UserGroup',UserGroupSchema);

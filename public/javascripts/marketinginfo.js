@@ -40,7 +40,7 @@ $(function() {
             },
             {
                 field: 'begin_time',
-                title: '创建时间',
+                title: '开始时间',
                 width: 100,
                 formatter: function(value,row,index){
                     return timeFormat(row.begin_time).minute;
@@ -48,7 +48,7 @@ $(function() {
             },
             {
                 field: 'end_time',
-                title: '创建时间',
+                title: '结束时间',
                 width: 100,
                 formatter: function(value,row,index){
                     return timeFormat(row.end_time).minute;
@@ -210,11 +210,11 @@ $(function() {
     });
     $('#begin_time,#end_time').datetimebox({
         required : true,
-        showSeconds : false
+        showSeconds : true
     });
     $('#begin_time_edit,#end_time_edit').datetimebox({
         required : true,
-        showSeconds : false
+        showSeconds : true
     });
     //工具方法
     marketing_tool = {
@@ -313,11 +313,11 @@ $(function() {
                             id : rows[0]._id,
                         },
                         beforeSend : function () {
-                            $('#hotel').datagrid('loading');
+                            $('#activity').datagrid('loading');
                         },
                         success : function (data) {
                             if (data.state > 0) {
-                                $('#hotel').datagrid('loaded');
+                                $('#activity').datagrid('loaded');
                                 $('#activity').datagrid('reload');
                                 $.messager.show({
                                     title: '提示',
@@ -333,7 +333,7 @@ $(function() {
                 $.messager.alert(' 警告操作', ' 上线记录至少选定一条数据！', 'warning');
             }
         },
-        //上线
+        //下线
         offline : function () {
             var rows = $('#activity').datagrid('getSelections');
             if (rows.length > 1) {
@@ -366,7 +366,7 @@ $(function() {
                     });
                 }
             } else if (rows.length == 0) {
-                $.messager.alert(' 警告操作', ' 上线记录至少选定一条数据！', 'warning');
+                $.messager.alert(' 警告操作', ' 下线记录至少选定一条数据！', 'warning');
             }
         },
         //取消所有选定

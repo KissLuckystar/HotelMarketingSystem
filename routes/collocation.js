@@ -57,6 +57,21 @@ router.post('/hotel/data',checkLogin,function(req,res,next){
         });
     }
 });
+//查询酒店列表，查询所有
+router.get('/hotel/all',checkLogin,function(req,res,next){
+    //查询酒店的信息
+    Hotel.find({},function(err,hotels){
+        if(err){
+            console.log(err);
+            return;
+        }
+        if(!hotels){
+            console.log('酒店列表为空');
+            return;
+        }
+        res.json(hotels);
+    });
+});
 //新增酒店信息
 router.post('/hotel/add',checkLogin,function(req,res,next){
     var hotel_name=req.fields.hotel_name;
@@ -136,429 +151,398 @@ router.post('/hotel/remove',checkLogin,function(req,res,next){
     }
     return res.json({'affected_rows':ids.length});
 });
-//班组管理
-router.get('/group',function(req,res,next){
-    Promise.all([
-        Group.find({},function(err,groups){
-            if(err){
-                console.log('find device err',err);
-            }
-            if(!groups){
-                //throw new Error('列表为空');
-                console.log('列表为空');
-            }
-        }),
-        Hotel.find({},function(err,hotels){
-            if(err){
-                console.log('find hotel err',err);
-            }
-            if(!hotels){
-                throw new Error('列表为空');
-            }
-        }),
-    ]).then(function(result){
-        var groups=result[0];
-        var hotels=result[1];
-
-        res.render('collocation/group/index',{
-            groups:groups,
-            hotels:hotels
-        })
-    }).catch(next);
+/**
+ * 班组管理路由控制
+ */
+//班组管理页面
+router.get('/group',checkLogin,function(req,res,next){
+    res.render('collocation/group/index');
 });
-
+//查询班组列表，条件查询
+router.post('/group/data',checkLogin,function(req,res,next){
+    var page=req.fields.page;   //页数
+    var rows=req.fields.rows;   //记录数
+    var search_group=req.fields.search_group;
+    var populate = "hotel_id";   //格式为字符串，用于populate查询
+    if(search_group){
+        var group_name=new RegExp(search_group, 'i');   //不区分大小写
+        var queryParams={
+            name:{$regex : group_name}
+        };
+        /**
+         * $page对象包含三个属性：pageNumber:当前页数（从1开始）；pageCount：总页数；length：总记录数；results:当前页的记录
+         * page默认从1开始，计算skip的参数为(page-1)*rows
+         * 往前台返回的数据不仅要返回分页后的数据，还要返回数据的总数
+         */
+        dbHelper.pageQuery(page,rows,Group,populate,queryParams,{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
+        });
+    }else{
+        dbHelper.pageQuery(page,rows,Group,populate,{},{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
+        });
+    }
+});
 //新增班组信息
 router.post('/group/add',checkLogin,function(req,res,next){
     var name=req.fields.name;
-    var hotel=req.fields.hotel;
-    var group_code=req.fields.group_code;
+    var hotel_id=req.fields.hotel_id;
     var begin_time=req.fields.begin_time;
     var end_time=req.fields.end_time;
     var note=req.fields.note;
-
-    //参数校验
-    try{
-        if(!name){
-            throw new Error('请填写酒店名称');
-        }
-        if(!hotel){
-            throw new Error('请填写酒店地址');
-        }
-        if(!group_code){
-            throw new Error('请填写酒店电话');
-        }
-    }catch(e){
-        console.log('参数校验未通过');
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+    var data={
+        state : 0,
+    };
     var group=new Group({
         name:name,
-        hotel:hotel,
-        group_code:group_code,
+        hotel_id:hotel_id,
         begin_time:begin_time,
         end_time:end_time,
         note:note
     });
-
+    //console.log('group:',group);
     group.save(function(err){
         if(err){
-            req.flash('error','新增失败');
-            return res.redirect('back');
+            console.log('error','新增失败');
+            return res.send(data);
         }
-        req.flash('success','新增成功');
-        res.redirect('/collocation/group');
+        data.state=1;
+        return res.send(data);
     });
 });
-//编辑班组信息
-router.get('/group/:groupId/edit',checkLogin,function(req,res,next){
-
-    var groupId=req.params.groupId; //获取要编辑的项
-
+//获取要编辑的班组信息
+router.post('/group/edit',checkLogin,function(req,res,next){
+    var id=req.fields.id; //获取要编辑的项
     //查询选择项的信息
-    Group.findOne({_id:groupId},function(err,group){
+    Group.findOne({_id:id}).populate('hotel_id').exec(function(err,group){
         if(err){
             console.log('find err');
             return;
         }
         if(!group){
-            req.flash('error','该选择项不存在');
-            res.redirect('/collocation/group');
+            console.log('error','该选择项不存在');
+            return;
         }
-        return res.json(group);  //将查询到的结果返回给页面
+        return res.json(group);
     });
 });
 //编辑班组信息
-router.post('/group/:groupId/edit',checkLogin,function(req,res,next){
-    var groupId=req.params.groupId;
-    var name=req.fields.name_e;
-    var hotel=req.fields.hotel_e;
-    var group_code=req.fields.group_code_e;
-    var begin_time=req.fields.begin_time_e;
-    var end_time=req.fields.end_time_e;
-    var note=req.fields.note_e;
-
-    //参数校验
-    try{
-        if(!name){
-            throw new Error('请填写酒店名称');
-        }
-        if(!hotel){
-            throw new Error('请填写酒店地址');
-        }
-        if(!group_code){
-            throw new Error('请填写酒店电话');
-        }
-    }catch(e){
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
-    var group=new Group({
+router.post('/group/update',checkLogin,function(req,res,next){
+    var id=req.fields.id;
+    var name=req.fields.name;
+    var hotel_id=req.fields.hotel_id;
+    var begin_time=req.fields.begin_time;
+    var end_time=req.fields.end_time;
+    var note=req.fields.note;
+    var data={
+        state : 0,
+    };
+    var group={
         name:name,
-        hotel:hotel,
-        group_code:group_code,
+        hotel_id:hotel_id,
         begin_time:begin_time,
         end_time:end_time,
         note:note
-    });
-
-    Hotel.update({_id:groupId},{$set:group},function(err){
+    };
+    //console.log('update group:',group);
+    Group.update({_id:id},{$set:group},function(err){
         if(err){
             console.log('err');
-            req.flash('error','更新失败');
-            return res.redirect('back');
+            return res.send(data);
         }
-        req.flash('success','更新成功');
-        res.redirect('/collocation/hotel');
+        data.state=1;
+        return res.send(data);
     });
 });
 //删除班组信息
 router.post('/group/remove',checkLogin,function(req,res,next){
-    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
-    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
-    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        Group.remove({_id:selJson[i]},function(err){
+    var idStr=req.fields.ids;
+    var ids=idStr.split(',');
+    for(var i = 0; i < ids.length ; i++ ){
+        Group.remove({_id:ids[i]},function(err){
             if(err){
                 console.log('del err',err);
-                return;
+                return res.json({'affected_rows':0});
             }
         })
     }
-    req.flash('success','删除成功');
-    return res.json({'success':'删除成功'});
+    return res.json({'affected_rows':ids.length});
 });
-
-//协议管理
-router.get('/protocol',function(req,res,next){
-    //查询协议信息，并显示
-    Protocol.find({},function(err,protocols){
-        if(err){
-            console.log('find hotel err',err);
-        }
-        if(!protocols){
-            throw new Error('列表为空');
-        }
-        res.render('collocation/protocol/index',{
-            protocols:protocols
+/**
+ * 协议管理路由控制
+ */
+//协议管理页面
+router.get('/protocol',checkLogin,function(req,res,next){
+    res.render('collocation/protocol/index');
+});
+//查询协议列表，条件查询
+router.post('/protocol/data',checkLogin,function(req,res,next){
+    var page=req.fields.page;   //页数
+    var rows=req.fields.rows;   //记录数
+    var search_protocol=req.fields.search_protocol;
+    var populate = "user_id";   //格式为字符串，用于populate查询
+    if(search_protocol){
+        var protocol_name=new RegExp(search_protocol, 'i');   //不区分大小写
+        var queryParams={
+            name:{$regex : protocol_name}
+        };
+        /**
+         * $page对象包含三个属性：pageNumber:当前页数（从1开始）；pageCount：总页数；length：总记录数；results:当前页的记录
+         * page默认从1开始，计算skip的参数为(page-1)*rows
+         * 往前台返回的数据不仅要返回分页后的数据，还要返回数据的总数
+         */
+        dbHelper.pageQuery(page,rows,Protocol,populate,queryParams,{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
         });
-    });
+    }else{
+        dbHelper.pageQuery(page,rows,Protocol,populate,{},{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
+        });
+    }
 });
 //新增协议信息
 router.post('/protocol/add',checkLogin,function(req,res,next){
-    var title=req.fields.title;
+    var name=req.fields.name;
     var content=req.fields.content;
+    var user_id=req.session.user._id;
     var note=req.fields.note;
-
-    //参数校验
-    try{
-        if(!title){
-            throw new Error('请填写协议标题');
-        }
-        if(!content){
-            throw new Error('请填写协议内容');
-        }
-    }catch(e){
-        console.log('参数校验未通过');
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+    var data={
+        state : 0,
+    };
     var protocol=new Protocol({
-        title:title,
+        name:name,
         content:content,
+        user_id:user_id,
         note:note
     });
-
+    //console.log('group:',group);
     protocol.save(function(err){
         if(err){
-            req.flash('error','新增失败');
-            return res.redirect('back');
+            console.log('error','新增失败');
+            return res.send(data);
         }
-        req.flash('success','新增成功');
-        res.redirect('/collocation/protocol');
+        data.state=1;
+        return res.send(data);
     });
 });
-//编辑协议信息
-router.get('/protocol/:protocolId/edit',checkLogin,function(req,res,next){
-
-    var protocolId=req.params.protocolId; //获取要编辑的项
-
+//获取要编辑的协议信息
+router.post('/protocol/edit',checkLogin,function(req,res,next){
+    var id=req.fields.id; //获取要编辑的项
     //查询选择项的信息
-    Protocol.findOne({_id:protocolId},function(err,protocol){
+    Protocol.findOne({_id:id}).populate('user_id').exec(function(err,protocol){
         if(err){
             console.log('find err');
             return;
         }
         if(!protocol){
-            req.flash('error','该选择项不存在');
-            res.redirect('/collocation/protocol');
+            console.log('error','该选择项不存在');
+            return;
         }
-        return res.json(protocol);  //将查询到的结果返回给页面
+        return res.json(protocol);
     });
 });
 //编辑协议信息
-router.post('/protocol/:protocolId/edit',checkLogin,function(req,res,next){
-    var protocolId=req.params.protocolId;
-    var title=req.fields.title_e;
-    var content=req.fields.content_e;
-    var note=req.fields.note_e;
-
-    //参数校验
-    try{
-        if(!title){
-            throw new Error('请填写协议标题');
-        }
-        if(!content){
-            throw new Error('请填写协议内容');
-        }
-    }catch(e){
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+router.post('/protocol/update',checkLogin,function(req,res,next){
+    var id=req.fields.id;
+    var name=req.fields.name;
+    var content=req.fields.content;
+    var note=req.fields.note;
+    var data={
+        state : 0
+    };
     var protocol={
-        title:title,
+        name:name,
         content:content,
         note:note
     };
-
-    Protocol.update({_id:protocolId},{$set:protocol},function(err){
+    //console.log('update group:',group);
+    Protocol.update({_id:id},{$set:protocol},function(err){
         if(err){
             console.log('err');
-            req.flash('error','更新失败');
-            return res.redirect('back');
+            return res.send(data);
         }
-        req.flash('success','更新成功');
-        res.redirect('/collocation/protocol');
+        data.state=1;
+        return res.send(data);
     });
 });
 //删除协议信息
 router.post('/protocol/remove',checkLogin,function(req,res,next){
-    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
-    //console.log(typeof(selStr));
-    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
-    //console.log(selJson+' '+typeof(selJson));
-    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        Protocol.remove({_id:selJson[i]},function(err){
+    var idStr=req.fields.ids;
+    var ids=idStr.split(',');
+    for(var i = 0; i < ids.length ; i++ ){
+        Protocol.remove({_id:ids[i]},function(err){
             if(err){
                 console.log('del err',err);
-                return;
+                return res.json({'affected_rows':0});
             }
         })
     }
-    req.flash('success','删除成功');
-    return res.json({'success':'删除成功'});
+    return res.json({'affected_rows':ids.length});
 });
-
-
-//设备管理
-router.get('/equipment',function(req,res,next){
-    //查询设备和酒店信息，并显示
-    Promise.all([
-        Device.find({},function(err,devices){
-            if(err){
-                console.log('find device err',err);
+/**
+ * 设备管理路由控制
+ */
+//设备管理页面
+router.get('/device',checkLogin,function(req,res,next){
+    res.render('collocation/device/index');
+});
+//查询设备列表，条件查询
+router.post('/device/data',checkLogin,function(req,res,next){
+    var page=req.fields.page;   //页数
+    var rows=req.fields.rows;   //记录数
+    var search_device=req.fields.search_device;
+    var populate = "hotel_id";   //格式为字符串，用于populate查询
+    if(search_device){
+        var device_name=new RegExp(search_device, 'i');   //不区分大小写
+        var queryParams={
+            name:{$regex : device_name}
+        };
+        /**
+         * $page对象包含三个属性：pageNumber:当前页数（从1开始）；pageCount：总页数；length：总记录数；results:当前页的记录
+         * page默认从1开始，计算skip的参数为(page-1)*rows
+         * 往前台返回的数据不仅要返回分页后的数据，还要返回数据的总数
+         */
+        dbHelper.pageQuery(page,rows,Device,populate,queryParams,{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
             }
-            if(!devices){
-                //throw new Error('列表为空');
-                console.log('列表为空');
+        });
+    }else{
+        dbHelper.pageQuery(page,rows,Device,populate,{},{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
             }
-        }),
-        Hotel.find({},function(err,hotels){
-            if(err){
-                console.log('find hotel err',err);
-            }
-            if(!hotels){
-                throw new Error('列表为空');
-            }
-        }),
-    ]).then(function(result){
-        var devices=result[0];
-        var hotels=result[1];
-
-        res.render('collocation/equipment/index',{
-            devices:devices,
-            hotels:hotels
-        })
-    }).catch(next);
-
+        });
+    }
 });
 //新增设备信息
-router.post('/equipment/add',checkLogin,function(req,res,next){
-    var device_hotel=req.fields.device_hotel;
-    var device_num=req.fields.device_num;
-    var device_mac=req.fields.device_mac;
-    var device_status=req.fields.device_status;
+router.post('/device/add',checkLogin,function(req,res,next){
+    var name=req.fields.name;
+    var mac=req.fields.mac;
+    var hotel_account=req.fields.hotel_account;
+    var hotel_id=req.fields.hotel_id;
+    var state=req.fields.state;
     var note=req.fields.note;
-
-    //参数校验
-    try{
-        if(!device_num){
-            throw new Error('请填写设备编号');
-        }
-        if(!device_mac){
-            throw new Error('请填写设备MAC地址');
-        }
-    }catch(e){
-        console.log('参数校验未通过');
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+    var data={
+        state : 0,
+    };
     var device=new Device({
-        device_hotel:device_hotel,
-        device_num:device_num,
-        device_mac:device_mac,
-        device_status:device_status,
+        name:name,
+        mac:mac,
+        hotel_account:hotel_account,
+        hotel_id:hotel_id,
+        state:state,
         note:note
     });
-
+    //console.log('group:',group);
     device.save(function(err){
         if(err){
-            req.flash('error','新增失败');
-            return res.redirect('back');
+            console.log('error','新增失败');
+            return res.send(data);
         }
-        req.flash('success','新增成功');
-        res.redirect('/collocation/equipment');
+        data.state=1;
+        return res.send(data);
     });
 });
-//编辑设备信息
-router.get('/equipment/:deviceId/edit',checkLogin,function(req,res,next){
-
-    var deviceId=req.params.deviceId; //获取要编辑的项
-
+//获取要编辑的设备信息
+router.post('/device/edit',checkLogin,function(req,res,next){
+    var id=req.fields.id; //获取要编辑的项
     //查询选择项的信息
-    Device.findOne({_id:deviceId},function(err,device){
+    Device.findOne({_id:id}).populate('hotel_id').exec(function(err,device){
         if(err){
             console.log('find err');
             return;
         }
         if(!device){
-            req.flash('error','该选择项不存在');
-            res.redirect('/collocation/equipment');
+            console.log('error','该选择项不存在');
+            return;
         }
-        //console.log(hotel);
-        //res.render('')
-        return res.json(device);  //将查询到的结果返回给页面
+        return res.json(device);
     });
 });
-//编辑酒店信息
-router.post('/equipment/:deviceId/edit',checkLogin,function(req,res,next){
-    var deviceId=req.params.deviceId;
-    var device_hotel=req.fields.device_hotel_e;
-    var device_num=req.fields.device_num_e;
-    var device_mac=req.fields.device_mac_e;
-    var device_status=req.fields.device_status_e;
-    var note=req.fields.note_e;
-
-    //参数校验
-    try{
-        if(!device_num){
-            throw new Error('请填写设备编号');
-        }
-        if(!device_mac){
-            throw new Error('请填写设备MAC地址');
-        }
-    }catch(e){
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+//编辑设备信息
+router.post('/device/update',checkLogin,function(req,res,next){
+    var id=req.fields.id;
+    var name=req.fields.name;
+    var mac=req.fields.mac;
+    var hotel_account=req.fields.hotel_account;
+    var hotel_id=req.fields.hotel_id;
+    var state=req.fields.state;
+    var note=req.fields.note;
+    var data={
+        state : 0
+    };
     var device={
-        device_hotel:device_hotel,
-        device_num:device_num,
-        device_mac:device_mac,
-        device_status:device_status,
+        name:name,
+        mac:mac,
+        hotel_account:hotel_account,
+        hotel_id:hotel_id,
+        state:state,
         note:note
     };
-
-    Device.update({_id:deviceId},{$set:device},function(err){
+    //console.log('update group:',group);
+    Device.update({_id:id},{$set:device},function(err){
         if(err){
             console.log('err');
-            req.flash('error','更新失败');
-            return res.redirect('back');
+            return res.send(data);
         }
-        req.flash('success','更新成功');
-        res.redirect('/collocation/equipment');
+        data.state=1;
+        return res.send(data);
     });
 });
 //删除设备信息
-router.post('/equipment/remove',checkLogin,function(req,res,next){
-    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
-    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
-    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        //console.log(selJson[i]);
-        Device.remove({_id:selJson[i]},function(err){
+router.post('/device/remove',checkLogin,function(req,res,next){
+    var idStr=req.fields.ids;
+    var ids=idStr.split(',');
+    for(var i = 0; i < ids.length ; i++ ){
+        Device.remove({_id:ids[i]},function(err){
             if(err){
                 console.log('del err',err);
-                return;
+                return res.json({'affected_rows':0});
             }
         })
     }
-    req.flash('success','删除成功');
-    return res.json({'success':'删除成功'});
+    return res.json({'affected_rows':ids.length});
 });
+
+
 
 module.exports=router;

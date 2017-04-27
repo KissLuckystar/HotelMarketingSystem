@@ -1,0 +1,20 @@
+<script type="text/javascript" src="../easyui/extension/datagrid-detailview.js"></script>
+<script type="text/javascript" src="../javascripts/product-verify.js"></script>
+<table id="products"></table>
+
+<div id="products_tool" style="padding:5px;">
+    <div style="margin-bottom:5px;">
+
+        <a href="#" class="easyui-linkbutton" iconCls="icon-online" plain="true" onclick="products_tool.pass();">审核通过</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-online" plain="true" onclick="products_tool.notpass();">审核不通过</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="products_tool.reload();">刷新</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" id="redo" onclick="products_tool.redo();">取消选择</a>
+    </div>
+    <form id="products_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            电子预售券名称：<input type="text" class="textbox" name="search_products" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="products_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="products_tool.reset();">重置</a>
+        </div>
+    </form>
+</div>

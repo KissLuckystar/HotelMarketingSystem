@@ -28,5 +28,13 @@ module.exports=function(){
 
     //引入活动信息model
     require('../models/activity.server.model.js');
+
+    require('../models/bill.server.model.js');
+    require('../models/evaluate.server.model.js');
+    require('../models/integral.server.model.js');
+    require('../models/profit.server.model.js');
+    require('../models/recharge.server.model.js');
+    require('../models/return.server.model.js');
+
     return db;//返回数据库实例
 };

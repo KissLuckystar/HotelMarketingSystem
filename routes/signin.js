@@ -21,7 +21,7 @@ router.get('/',checkNotLogin,function(req,res,next){
 router.post('/',checkNotLogin,function(req,res,next){
     var userId=req.fields.userId;
     var password=req.fields.userPassword;
-    User.findOne({'userId':userId},function(err,user){
+    User.findOne({'account':userId},function(err,user){
         if(err){
             res.end('login failed');
         }
@@ -31,10 +31,10 @@ router.post('/',checkNotLogin,function(req,res,next){
             return res.redirect('/signin');
         }
         //生成密码的md5值
-        var md5 = crypto.createHash('md5');
-        password = md5.update(password).digest('hex');
-        console.log(password);
-        if (user.userPassword != password) {
+        //var md5 = crypto.createHash('md5');
+        //password = md5.update(password).digest('hex');
+        //console.log(password);
+        if (user.password != password) {
             console.log('密码错误');
             req.flash('error', '密码错误');
             return res.redirect('/signin');

@@ -1,6 +1,6 @@
 /**
  * Created by smk on 2017/4/18.
- * 配置管理
+ * 配置管理-酒店管理
  */
 $(function(){
     //hotel DataGrid数据表格

@@ -14,375 +14,292 @@ var UserFunc=mongoose.model('UserFunc');
 mongoose.Promise =global.Promise;//解决（mongoose's default promise library) is deprecated
 
 var checkLogin=require('../middlewares/checkLogin').checkLogin;
+var dbHelper = require('../middlewares/dbHelper');
 
-router.get('/userfunc/:name',function(req,res,next){
-    var name=req.params.name;
-    UserFunc.findOne({name:name},function(err,func){
-        if(err){
-            return;
-        }else if(!func){
-            return res.json([]);
-        }else{
-            UserFunc.find({nid:func.id},function(err,funcs){
-                if(err){
-                    return;
-                } else {
-                    var json=[];
-                    for(var i=0;i<funcs.length;i++){
-                        var obj={
-                            "id" : funcs[i].id,
-                            "text" : funcs[i].text,
-                            "iconCls" : funcs[i].iconCls,
-                            "url" : funcs[i].url,
-                        };
-                        json.push(obj);
-                    }
-                    res.json(json);
-                }
-            });
-        }
-    });
-    // var json=[{
-    //     "id" : 1,
-    //     "text" : "系统管理",
-    //     "iconCls" : "icon-save",
-    //     "children" : [{
-    //         "text" : "主机信息",
-    //         "checked" : false,
-    //         "state" : "closed",
-    //         "children" : [{
-    //             "text" : "版本信息"
-    //         },{
-    //             "text" : "程序信息"
-    //         }]
-    //     },{
-    //         "text" : "更新信息",
-    //         "checked" : true,
-    //         "attributes" : {
-    //             "url":"/demo/book/abc",
-    //             "price":100
-    //         }
-    //     },{
-    //         "text" : "程序信息"
-    //     }]
-    // },{
-    //     "id" : 2,
-    //     "text" : "会员管理",
-    //     "children" : [{
-    //         "text" : "新增会员"
-    //     },{
-    //         "text" : "审核会员"
-    //     }]
-    // }];
-    // res.json(json);
-});
-
-//用户组页面
+/**
+ * 用户组管理路由控制
+ */
+//用户组管理页面
 router.get('/usergroup',checkLogin,function(req,res,next){
-    Promise.all([
-        UserGroup.find({},function(err,usergroups){
-            if(err){
-                console.log('find device err',err);
+    res.render('authority/usergroup/index');
+});
+//查询用户组列表，条件查询
+router.post('/usergroup/data',checkLogin,function(req,res,next){
+    var page=req.fields.page;   //页数
+    var rows=req.fields.rows;   //记录数
+    var search_usergroup=req.fields.search_usergroup;
+    var populate = "hotel_id";   //格式为字符串，用于populate查询
+    if(search_usergroup){
+        var usergroup_name=new RegExp(search_usergroup, 'i');   //不区分大小写
+        var queryParams={
+            name:{$regex : usergroup_name}
+        };
+        /**
+         * $page对象包含三个属性：pageNumber:当前页数（从1开始）；pageCount：总页数；length：总记录数；results:当前页的记录
+         * page默认从1开始，计算skip的参数为(page-1)*rows
+         * 往前台返回的数据不仅要返回分页后的数据，还要返回数据的总数
+         */
+        dbHelper.pageQuery(page,rows,UserGroup,populate,queryParams,{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
             }
-            if(!usergroups){
-                //throw new Error('列表为空');
-                console.log('列表为空');
+        });
+    }else{
+        dbHelper.pageQuery(page,rows,UserGroup,populate,{},{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
             }
-        }),
-        Hotel.find({},function(err,hotels){
-            if(err){
-                console.log('find hotel err',err);
-            }
-            if(!hotels){
-                throw new Error('列表为空');
-            }
-        })
-    ]).then(function(result){
-        var usergroups=result[0];
-        var hotels=result[1];
-
-        res.render('authority/usergroup/index',{
-            usergroups:usergroups,
-            hotels:hotels
-        })
-    }).catch(next);
-
+        });
+    }
 });
 //新增用户组信息
 router.post('/usergroup/add',checkLogin,function(req,res,next){
     var name=req.fields.name;
-    var hotel=req.fields.hotel;
+    var hotel_id=req.fields.hotel_id;
     var authority=req.fields.authority;
     var note=req.fields.note;
-
-    //参数校验
-    try{
-        if(!name){
-            throw new Error('请填写用户组名称');
-        }
-        if(!hotel){
-            throw new Error('请填写所属酒店');
-        }
-    }catch(e){
-        console.log('参数校验未通过');
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+    var data={
+        state : 0,
+    };
     var usergroup=new UserGroup({
         name:name,
-        hotel:hotel,
+        hotel_id:hotel_id,
         authority:authority,
         note:note
     });
-
+    console.log('usergroup:',usergroup);
     usergroup.save(function(err){
         if(err){
-            req.flash('error','新增失败');
-            return res.redirect('back');
+            console.log('error','新增失败');
+            return res.send(data);
         }
-        req.flash('success','新增成功');
-        res.redirect('/authority/usergroup');
+        data.state=1;
+        return res.send(data);
     });
 });
-//编辑用户组信息
-router.get('/usergroup/:id/edit',checkLogin,function(req,res,next){
-
-    var Id=req.params.id; //获取要编辑的项
-
+//获取要编辑的用户组信息
+router.post('/usergroup/edit',checkLogin,function(req,res,next){
+    var id=req.fields.id; //获取要编辑的项
     //查询选择项的信息
-    UserGroup.findOne({_id:Id},function(err,usergroup){
+    UserGroup.findOne({_id:id}).populate('hotel_id').exec(function(err,usergroup){
         if(err){
             console.log('find err');
             return;
         }
         if(!usergroup){
-            req.flash('error','该选择项不存在');
-            res.redirect('/authority/usergroup');
+            console.log('error','该选择项不存在');
+            return;
         }
-        return res.json(usergroup);  //将查询到的结果返回给页面
+        return res.json(usergroup);
     });
 });
 //编辑用户组信息
-router.post('/usergroup/:id/edit',checkLogin,function(req,res,next){
-    var id=req.params.id;
-    var name=req.fields.name_e;
-    var hotel=req.fields.hotel_e;
-    var authority=req.fields.authority_e;
-    var note=req.fields.note_e;
-
-    //参数校验
-    try{
-        if(!name){
-            throw new Error('请填写用户组名称');
-        }
-        if(!hotel){
-            throw new Error('请填写所属酒店');
-        }
-    }catch(e){
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
+router.post('/usergroup/update',checkLogin,function(req,res,next){
+    var id=req.fields.id;
+    var name=req.fields.name;
+    var hotel_id=req.fields.hotel_id;
+    var authority=req.fields.authority;
+    var note=req.fields.note;
+    var data={
+        state : 0,
+    };
     var usergroup={
         name:name,
-        hotel:hotel,
+        hotel_id:hotel_id,
         authority:authority,
         note:note
     };
-
+    //console.log('update usergroup:',usergroup);
     UserGroup.update({_id:id},{$set:usergroup},function(err){
         if(err){
             console.log('err');
-            req.flash('error','更新失败');
-            return res.redirect('back');
+            return res.send(data);
         }
-        req.flash('success','更新成功');
-        res.redirect('/authority/usergroup');
+        data.state=1;
+        return res.send(data);
     });
 });
 //删除用户组信息
 router.post('/usergroup/remove',checkLogin,function(req,res,next){
-    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
-    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
-    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        UserGroup.remove({_id:selJson[i]},function(err){
+    var idStr=req.fields.ids;
+    var ids=idStr.split(',');
+    for(var i = 0; i < ids.length ; i++ ){
+        UserGroup.remove({_id:ids[i]},function(err){
             if(err){
                 console.log('del err',err);
-                return;
+                return res.json({'affected_rows':0});
             }
         })
     }
-    req.flash('success','删除成功');
-    return res.json({'success':'删除成功'});
+    return res.json({'affected_rows':ids.length});
 });
 
+/**
+ * 用户管理路由控制
+ */
 //用户管理页面
 router.get('/user',checkLogin,function(req,res,next){
-    Promise.all([
-        User.find({},function(err,users){
-            if(err){
-                console.log('find device err',err);
-            }
-            if(!users){
-                //throw new Error('列表为空');
-                console.log('列表为空');
-            }
-        }),
-        Hotel.find({},function(err,hotels){
-            if(err){
-                console.log('find hotel err',err);
-            }
-            if(!hotels){
-                throw new Error('列表为空');
-            }
-        }),
-        UserGroup.find({},function(err,usergroups){
-            if(err){
-                console.log('find device err',err);
-            }
-            if(!usergroups){
-                //throw new Error('列表为空');
-                console.log('列表为空');
-            }
-        })
-    ]).then(function(result){
-        var users=result[0];
-        var hotels=result[1];
-        var usergroups=result[2];
-
-        res.render('authority/user/index',{
-            users:users,
-            hotels:hotels,
-            usergroups:usergroups
-        })
-    }).catch(next);
-
+    res.render('authority/user/index');
 });
-//新增用户信息
-router.post('/user/add',checkLogin,function(req,res,next){
-    var userId=req.fields.userId;
-    var userName=req.fields.userName;
-    var md5 = crypto.createHash('md5');
-    var userPassword = md5.update(req.fields.userPassword).digest('hex');
-    var userSex=req.fields.userSex;
-    var userPhone=req.fields.userPhone;
-    var userHotelCode=req.fields.userHotelCode;
-    var userClassCode=req.fields.userClassCode;
-    var userStatus=req.fields.userStatus;
-    var note=req.fields.note;
-
-    //参数校验
-    try{
-        if(!userId){
-            throw new Error('请填写用户组名称');
-        }
-        if(!userName){
-            throw new Error('请填写所属酒店');
-        }
-    }catch(e){
-        console.log('参数校验未通过');
-        req.flash('error', e.message);
-        return res.redirect('back');
+//查询用户组列表，条件查询
+router.post('/user/data',checkLogin,function(req,res,next){
+    var page=req.fields.page;   //页数
+    var rows=req.fields.rows;   //记录数
+    var search_user=req.fields.search_user;
+    var populate = "hotel_id group_id usergroup_id";   //格式为字符串，用于populate查询
+    if(search_user){
+        var user_name=new RegExp(search_user, 'i');   //不区分大小写
+        var queryParams={
+            name:{$regex : user_name}
+        };
+        /**
+         * $page对象包含三个属性：pageNumber:当前页数（从1开始）；pageCount：总页数；length：总记录数；results:当前页的记录
+         * page默认从1开始，计算skip的参数为(page-1)*rows
+         * 往前台返回的数据不仅要返回分页后的数据，还要返回数据的总数
+         */
+        dbHelper.pageQuery(page,rows,User,populate,queryParams,{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
+        });
+    }else{
+        dbHelper.pageQuery(page,rows,User,populate,{},{},function(error,$page){
+            if(error){
+                next(error);
+            }else{
+                res.json({
+                    rows : $page.results,
+                    total : $page.length,
+                })
+            }
+        });
     }
-
+});
+//新增用户组信息
+router.post('/user/add',checkLogin,function(req,res,next){
+    var account=req.fields.account;
+    var name=req.fields.name;
+    var password=req.fields.password;
+    var sex=req.fields.sex;
+    var birth=req.fields.birth;
+    var phone=req.fields.phone;
+    var email=req.fields.email;
+    var identity=req.fields.identity;
+    var hotel_id=req.fields.hotel_id;
+    var group_id=req.fields.group_id;
+    var usergroup_id=req.fields.usergroup_id;
+    var state=req.fields.state;
+    var data={
+        state : 0
+    };
     var user=new User({
-        userId:userId,
-        userName:userName,
-        userPassword:userPassword,
-        userSex:userSex,
-        userPhone:userPhone,
-        userHotelCode:userHotelCode,
-        userClassCode:userClassCode,
-        userStatus:userStatus,
-        note:note
+        account:account,
+        name:name,
+        password:password,
+        sex:sex,
+        birth:birth,
+        phone:phone,
+        email:email,
+        identity:identity,
+        hotel_id:hotel_id,
+        group_id:group_id,
+        usergroup_id:usergroup_id,
+        state:state
     });
-
+    //console.log('user:',user);
     user.save(function(err){
         if(err){
-            req.flash('error','新增失败');
-            return res.redirect('back');
+            console.log('error','新增失败');
+            return res.send(data);
         }
-        req.flash('success','新增成功');
-        res.redirect('/authority/user');
+        data.state=1;
+        return res.send(data);
     });
 });
-//编辑用户信息
-router.get('/user/:id/edit',checkLogin,function(req,res,next){
-
-    var id=req.params.id; //获取要编辑的项
-
+//获取要编辑的用户组信息
+router.post('/user/edit',checkLogin,function(req,res,next){
+    var id=req.fields.id; //获取要编辑的项
     //查询选择项的信息
-    User.findOne({_id:id},function(err,user){
+    User.findOne({_id:id}).populate('hotel_id group_id usergroup_id').exec(function(err,user){
         if(err){
             console.log('find err');
             return;
         }
         if(!user){
-            req.flash('error','该选择项不存在');
-            res.redirect('/authority/user');
+            console.log('error','该选择项不存在');
+            return;
         }
-        return res.json(user);  //将查询到的结果返回给页面
+        return res.json(user);
     });
 });
-//编辑用户信息
-router.post('/user/:id/edit',checkLogin,function(req,res,next){
-    var id=req.params.id;
-    var userName=req.fields.userName_e;
-    var md5 = crypto.createHash('md5');
-    var userPassword = md5.update(req.fields.userPassword_e).digest('hex');
-    var userSex=req.fields.userSex_e;
-    var userPhone=req.fields.userPhone_e;
-    var userHotelCode=req.fields.userHotelCode_e;
-    var userClassCode=req.fields.userClassCode_e;
-    var userStatus=req.fields.userStatus_e;
-    var note=req.fields.note_e;
-
-    //参数校验
-    try{
-        if(!userName){
-            throw new Error('请填写用户组名称');
-        }
-    }catch(e){
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
-    var user={
-        userName:userName,
-        userPassword:userPassword,
-        userSex:userSex,
-        userPhone:userPhone,
-        userHotelCode:userHotelCode,
-        userClassCode:userClassCode,
-        userStatus:userStatus,
-        note:note
+//编辑用户组信息
+router.post('/user/update',checkLogin,function(req,res,next){
+    var id=req.fields.id;
+    var name=req.fields.name;
+    var password=req.fields.password;
+    var sex=req.fields.sex;
+    var birth=req.fields.birth;
+    var phone=req.fields.phone;
+    var email=req.fields.email;
+    var identity=req.fields.identity;
+    var hotel_id=req.fields.hotel_id;
+    var group_id=req.fields.group_id;
+    var usergroup_id=req.fields.usergroup_id;
+    var state=req.fields.state;
+    var data={
+        state : 0,
     };
-
+    var user={
+        name:name,
+        password:password,
+        sex:sex,
+        birth:birth,
+        phone:phone,
+        email:email,
+        identity:identity,
+        hotel_id:hotel_id,
+        group_id:group_id,
+        usergroup_id:usergroup_id,
+        state:state
+    };
+    console.log('update user:',user);
     User.update({_id:id},{$set:user},function(err){
         if(err){
             console.log('err');
-            req.flash('error','更新失败');
-            return res.redirect('back');
+            return res.send(data);
         }
-        req.flash('success','更新成功');
-        res.redirect('/authority/user');
+        data.state=1;
+        return res.send(data);
     });
 });
-//删除用户信息
+//删除用户组信息
 router.post('/user/remove',checkLogin,function(req,res,next){
-    var selStr=req.fields._ids;  //获取ajax提交的data,暂时不知为何为string类型，req.fields为object
-    var selJson=JSON.parse(selStr);  //将JSON字符串转换为JSON对象
-    for(var i in selJson){    //采用JSON.parse()方法遍历得到要删除的选项
-        User.remove({_id:selJson[i]},function(err){
+    var idStr=req.fields.ids;
+    var ids=idStr.split(',');
+    for(var i = 0; i < ids.length ; i++ ){
+        User.remove({_id:ids[i]},function(err){
             if(err){
                 console.log('del err',err);
-                return;
+                return res.json({'affected_rows':0});
             }
         })
     }
-    req.flash('success','删除成功');
-    return res.json({'success':'删除成功'});
+    return res.json({'affected_rows':ids.length});
 });
 
 module.exports=router;

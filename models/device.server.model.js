@@ -6,11 +6,15 @@
 var mongoose=require('mongoose');
 
 var DeviceSchema=new mongoose.Schema({
-    device_hotel:String,
-    device_num:String,
-    device_mac:String,
-    device_status:Number,
-    note:String
+    name:String,   //设备编号
+    mac:String,   //MAC地址
+    hotel_account:String,   //银行账户
+    hotel_id:{   //所属酒店
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Hotel'
+    },
+    state:String,  //设备状态
+    note:String   //备注
 });
 
 mongoose.model('Device',DeviceSchema);

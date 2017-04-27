@@ -1,0 +1,40 @@
+<script type="text/javascript" src="../javascripts/collocation-device.js"></script>
+<table id="device"></table>
+
+<div id="device_tool" style="padding:5px;">
+    <div style="margin-bottom:5px;">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="device_tool.add();">添加</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="device_tool.edit();">修改</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="device_tool.remove();">删除</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="device_tool.reload();">刷新</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" id="redo" onclick="device_tool.redo();">取消选择</a>
+    </div>
+    <form id="device_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            设备编号：<input type="text" class="textbox" name="search_device" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="device_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="device_tool.reset();">重置</a>
+        </div>
+    </form>
+</div>
+
+<!--新增-->
+<form id="device_add" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p>设备编号：<input type="text" name="name" class="textbox" style="width:200px;"></p>
+    <p>MAC地址：<input type="text" name="mac" class="textbox" style="width:200px;"></p>
+    <p>银行账户：<input type="text" name="hotel_account" class="textbox" style="width:200px;"></p>
+    <p>所属酒店：<input class="text" id="hotel_id" name="hotel_id" style="width:205px;"></p>
+    <p>设备状态：<input id="state" name="state" class="text" style="width:205px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：<input type="text" name="note" class="textbox" style="width:200px;"></p>
+</form>
+
+<!--编辑-->
+<form id="device_edit" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p><input type="hidden" name="id" class="textbox" style="width:200px;"></p>
+    <p>设备编号：<input type="text" name="name_edit" class="textbox" style="width:200px;"></p>
+    <p>MAC地址：<input type="text" name="mac_edit" class="textbox" style="width:200px;"></p>
+    <p>银行账户：<input type="text" name="hotel_account_edit" class="textbox" style="width:200px;"></p>
+    <p>所属酒店：<input class="text" id="hotel_id_edit" name="hotel_id_edit" style="width:205px;"></p>
+    <p>设备状态：<input id="state_edit" name="state_edit" class="text" style="width:205px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：<input type="text" name="note_edit" class="textbox" style="width:200px;"></p>
+</form>

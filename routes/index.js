@@ -15,5 +15,7 @@ module.exports=function(app){
     app.use('/authority',require('./authority'));//权限管理
     app.use('/marketinginfo',require('./marketinginfo'));//权限管理
     app.use('/accountbill',require('./accountbill'));//账户账单
-    app.use('/product',require('./product'));//账户账单
+    app.use('/product',require('./product'));//产品
+    //公共路由
+    app.use('/common',require('./common'));
 };

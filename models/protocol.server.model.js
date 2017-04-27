@@ -1,14 +1,21 @@
 /**
  * Created by smk on 2016/12/9.
- * Ğ­ÒéĞÅÏ¢±í
- * ×Ö¶ÎÖ÷Òª°üÀ¨Ğ­Òé±êÌâ£¬Ğ­ÒéÄÚÈİ£¬±¸×¢
+ * åè®®ç®¡ç†
  */
 var mongoose=require('mongoose');
 
 var ProtocolSchema=new mongoose.Schema({
-    title:String,
-    content:String,
-    note:String
+    name:String,   //åè®®æ ‡é¢˜
+    content:String,   //åè®®å†…å®¹
+    user_id:{   //åˆ›å»ºäºº
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+    },
+    create_time:{   //åˆ›å»ºæ—¶é—´
+        type:Date,
+        default:Date.now
+    },
+    note:String   //å¤‡æ³¨
 });
 
 mongoose.model('Protocol',ProtocolSchema);

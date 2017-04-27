@@ -1,0 +1,21 @@
+<script type="text/javascript" src="../easyui/extension/datagrid-detailview.js"></script>
+<script type="text/javascript" src="../javascripts/product-maintain.js"></script>
+<table id="productt"></table>
+
+<div id="productt_tool" style="padding:5px;">
+    <div style="margin-bottom:5px;">
+
+        <a href="#" class="easyui-linkbutton" iconCls="icon-online" plain="true" onclick="productt_tool.pause();">暂停销售</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-online" plain="true" onclick="productt_tool.unlock();">开启销售</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-online" plain="true" onclick="productt_tool.stop();">产品下架</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="productt_tool.reload();">刷新</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" id="redo" onclick="productt_tool.redo();">取消选择</a>
+    </div>
+    <form id="productt_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            电子预售券名称：<input type="text" class="textbox" name="search_productt" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="productt_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="productt_tool.reset();">重置</a>
+        </div>
+    </form>
+</div>
