@@ -1,0 +1,13 @@
+<script type="text/javascript" src="../javascripts/accountbill-bill.js"></script>
+<table id="bill"></table>
+
+<div id="bill_tool" style="padding:5px;">
+    <form id="bill_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            购买者：<input type="text" class="textbox" name="search_bill" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="bill_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="bill_tool.reset();">重置</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="bill_tool.reload();">刷新</a>
+        </div>
+    </form>
+</div>

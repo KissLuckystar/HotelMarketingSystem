@@ -7,10 +7,7 @@ var mongoose=require('mongoose');
 //定义后台管理员的Schema
 var AppUserSchema=new mongoose.Schema({
     account:String,   //账号
-    name:{            //姓名
-        type:String,
-        trim:true//去空格
-    },
+    name:String,     //姓名
     password:String,   //密码
     phone:String,   //电话
     email:String,   //邮箱
@@ -20,7 +17,6 @@ var AppUserSchema=new mongoose.Schema({
     },
     account_tmoney:Number, //账户总资产
     account_lmoney:Number,   //账户余额
-    integral:Number,
     pay_pass:String,   //支付密码
     photo:String,   //头像
     create_time:{    //注册时间

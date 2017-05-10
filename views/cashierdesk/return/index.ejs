@@ -1,0 +1,15 @@
+<script type="text/javascript" src="../javascripts/recharge-return.js"></script>
+
+<table id="return"></table>
+
+<div id="return_tool" style="padding:5px;">
+    <form id="return_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            电子预售券名称：<input type="text" class="textbox" name="search_return" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="return_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="return_tool.reset();">重置</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="return_tool.reload();">刷新</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="return_tool.back();">误收退还</a>
+        </div>
+    </form>
+</div>

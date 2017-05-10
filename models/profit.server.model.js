@@ -4,7 +4,7 @@
  */
 var mongoose=require('mongoose');
 
-var EvaluateSchema=new mongoose.Schema({
+var ProfitSchema=new mongoose.Schema({
     bill_id:{            //客户账单
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Bill'
@@ -15,4 +15,4 @@ var EvaluateSchema=new mongoose.Schema({
     state:String    //状态
 });
 
-mongoose.model('Evaluate',EvaluateSchema);
+mongoose.model('Profit',ProfitSchema);

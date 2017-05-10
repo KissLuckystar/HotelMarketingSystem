@@ -1,0 +1,14 @@
+<script type="text/javascript" src="../javascripts/recharge-record.js"></script>
+
+<table id="recharge"></table>
+
+<div id="recharge_tool" style="padding:5px;">
+    <form id="recharge_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            电子预售券名称：<input type="text" class="textbox" name="search_recharge" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="recharge_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="recharge_tool.reset();">重置</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="recharge_tool.reload();">刷新</a>
+        </div>
+    </form>
+</div>

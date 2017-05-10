@@ -2,6 +2,7 @@
  * Created by smk on 2017/4/27.
  * 误收退还
  */
+var mongoose=require('mongoose');
 
 var ReturnSchema=new mongoose.Schema({
     trade_id:{            //交易单号

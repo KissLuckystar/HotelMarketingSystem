@@ -1,0 +1,40 @@
+<script type="text/javascript" src="../javascripts/accountbill-account.js"></script>
+<table id="appuser"></table>
+
+<div id="appuser_tool" style="padding:5px;">
+    <div style="margin-bottom:5px;">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="appuser_tool.add();">添加</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="appuser_tool.edit();">修改</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="appuser_tool.remove();">删除</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="appuser_tool.reload();">刷新</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" id="redo" onclick="appuser_tool.redo();">取消选择</a>
+    </div>
+    <form id="appuser_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            客户姓名：<input type="text" class="textbox" name="search_appuser" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="appuser_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="appuser_tool.reset();">重置</a>
+        </div>
+    </form>
+</div>
+
+<!--新增-->
+<form id="appuser_add" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;账号：<input type="text" name="account" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;姓名：<input type="text" name="name" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码：<input type="text" name="password" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;电话号码：<input type="text" name="phone" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮箱：<input type="text" name="email" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态：<input id="state" name="state" class="text" style="width:205px;"></p>
+</form>
+
+<!--编辑-->
+<form id="appuser_edit" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p><input type="hidden" name="id" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;账号：<input type="text" name="account_edit" disabled="true" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;姓名：<input type="text" name="name_edit" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码：<input type="text" name="password_edit" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;电话号码：<input type="text" name="phone_edit" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮箱：<input type="text" name="email_edit" class="textbox" style="width:200px;"></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态：<input id="state_edit" name="state_edit" class="text" style="width:205px;"></p>
+</form>

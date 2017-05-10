@@ -2,7 +2,10 @@
  * Created by smk on 2017/4/27.
  * 账单
  */
+var mongoose=require('mongoose');
+
 var BillSchema=new mongoose.Schema({
+    id:String,   //账单编号
     product_id:{            //产品编号，名称
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Product'

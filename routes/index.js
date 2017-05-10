@@ -16,6 +16,8 @@ module.exports=function(app){
     app.use('/marketinginfo',require('./marketinginfo'));//权限管理
     app.use('/accountbill',require('./accountbill'));//账户账单
     app.use('/product',require('./product'));//产品
+    app.use('/cashierdesk',require('./cashierdesk'));//收银台
+    app.use('/salesstatistics',require('./salesstatistics'));//销售统计
     //公共路由
     app.use('/common',require('./common'));
 };

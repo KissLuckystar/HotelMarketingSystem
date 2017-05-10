@@ -59,7 +59,7 @@ $(function() {
                 title: '发布人',
                 width: 50,
                 formatter: function(value,row,index){
-                        return row.publisher.userName;
+                        return row.publisher.name;
                 }
             },
             {

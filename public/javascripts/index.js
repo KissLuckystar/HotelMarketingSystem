@@ -120,6 +120,35 @@ $(function(){
             }
         }
     });
+    //账户账单管理
+    $("#accountbill_nav").tree({
+        data : [{
+            "id" : 1,
+            "text" : "APP用户管理",
+            "iconCls" : "icon-application",
+            "url" : "/accountbill/appuser",
+        },{
+            "id" : 2,
+            "text" : "账单管理",
+            "iconCls" : "icon-application",
+            "url" : "/accountbill/bill",
+        }],
+        lines:true,
+        onClick : function (node) {
+            if (node.url) {
+                if ($('#tabs').tabs('exists', node.text)) {
+                    $('#tabs').tabs('select', node.text);
+                } else {
+                    $('#tabs').tabs('add', {
+                        title: node.text,
+                        closable: true,
+                        iconCls : node.iconCls,
+                        href : node.url ,
+                    });
+                }
+            }
+        }
+    });
     $.parser.parse();
     //营销信息管理
     $("#marketinginfo_nav").tree({
@@ -128,6 +157,69 @@ $(function(){
             "text" : "营销活动管理",
             "iconCls" : "icon-application",
             "url" : "/marketinginfo/activity",
+        }],
+        lines:true,
+        onClick : function (node) {
+            if (node.url) {
+                if ($('#tabs').tabs('exists', node.text)) {
+                    $('#tabs').tabs('select', node.text);
+                } else {
+                    $('#tabs').tabs('add', {
+                        title: node.text,
+                        closable: true,
+                        iconCls : node.iconCls,
+                        href : node.url ,
+                    });
+                }
+            }
+        }
+    });
+    //收银台
+    $("#salesstatistics_nav").tree({
+        data : [{
+            "id" : 1,
+            "text" : "电子预售券销售统计",
+            "iconCls" : "icon-application",
+            "url" : "/salesstatistics/productsale",
+        },{
+            "id" : 2,
+            "text" : "电子预售券存量统计",
+            "iconCls" : "icon-application",
+            "url" : "/salesstatistics/productstock",
+        }],
+        lines:true,
+        onClick : function (node) {
+            if (node.url) {
+                if ($('#tabs').tabs('exists', node.text)) {
+                    $('#tabs').tabs('select', node.text);
+                } else {
+                    $('#tabs').tabs('add', {
+                        title: node.text,
+                        closable: true,
+                        iconCls : node.iconCls,
+                        href : node.url ,
+                    });
+                }
+            }
+        }
+    });
+    //收银台
+    $("#cashierdesk_nav").tree({
+        data : [{
+            "id" : 1,
+            "text" : "后台充值",
+            "iconCls" : "icon-application",
+            "url" : "/cashierdesk/recharge",
+        },{
+            "id" : 2,
+            "text" : "充值记录",
+            "iconCls" : "icon-application",
+            "url" : "/cashierdesk/recharge/record",
+        },{
+            "id" : 3,
+            "text" : "误收退还",
+            "iconCls" : "icon-application",
+            "url" : "/cashierdesk/return",
         }],
         lines:true,
         onClick : function (node) {

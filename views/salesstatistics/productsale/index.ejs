@@ -1,0 +1,24 @@
+<script type="text/javascript" src="../javascripts/echarts.js"></script>
+<script type="text/javascript" src="../javascripts/product-sale.js"></script>
+
+<div id="sale_tool" style="padding:5px;">
+    <form id="sale_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            在售电子预售券名称：<input type="text" class="textbox" id="search_sale" name="search_sale" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="sale_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="sale_tool.reset();">重置</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="sale_tool.reload();">导出</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="sale_tool.back();">打印</a>
+        </div>
+    </form>
+</div>
+
+<table id="sale"></table>
+
+<div id="sale-bar" style="width: 900px;height:500px;margin:20px auto;border:1px solid #eeeeee"></div>
+<div id="sale-line" style="width: 900px;height:500px;margin:20px auto;border:1px solid #eeeeee"></div>
+
+<script type="text/javascript">
+
+
+</script>

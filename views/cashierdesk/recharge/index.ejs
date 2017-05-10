@@ -1,0 +1,30 @@
+<script type="text/javascript" src="../easyui/extension/datagrid-detailview.js"></script>
+<script type="text/javascript" src="../javascripts/recharge.js"></script>
+<table id="producti"></table>
+
+
+<div id="producti_tool" style="padding:5px;">
+    <div style="margin-bottom:5px;">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="producti_tool.buy();">购买充值</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="producti_tool.reload();">刷新</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" id="redo" onclick="producti_tool.redo();">取消选择</a>
+    </div>
+    <form id="producti_search" method="post">
+        <div style="padding:0 0 0 7px;color:#333;">
+            在售电子预售券名称：<input type="text" class="textbox" name="search_producti" style="width:150px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="producti_tool.search();">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-reset" onclick="producti_tool.reset();">重置</a>
+        </div>
+    </form>
+</div>
+
+<!--购买-->
+<form id="producti_buy" style="margin:0;padding:5px 0 0 25px;color:#333;">
+    <p><input type="hidden" name="id" class="textbox" style="width:200px;"></p>
+    <p>产品名称：<input type="text" name="name" class="textbox" style="width:200px;"></p>
+    <p>充值账户：<input type="text" name="appuser_id" class="textbox" style="width:200px;"></p>
+    <p>充值金额(元)：<input type="text" name="recharge" class="textbox" style="width:200px;"></p>
+    <p>赠送金额(元)：<input type="text" name="back" class="textbox" style="width:200px;"></p>
+    <p>充值方式：<input type="text" name="way" class="textbox" style="width:200px;"></p>
+    <p><input type="hidden" name="left_amount" class="textbox" style="width:200px;"></p>
+</form>

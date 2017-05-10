@@ -9,6 +9,10 @@ var RechargeSchema=new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'AppUser'
     },
+    product_id:{            //产品编号，名称
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Product'
+    },
     recharge:Number,   //充值金额
     back:Number,   //赠送金额
     way:String,   //充值方式
